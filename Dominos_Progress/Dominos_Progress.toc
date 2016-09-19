@@ -1,0 +1,14 @@
+﻿## Interface: 70000
+## Title: Dominos Progress
+## Notes: Progress bars of all sorts
+## Author: Tuller
+## Dependencies: Dominos
+## OptionalDeps: LibSharedMedia-3.0
+embeds.xml
+localization.xml
+main.lua
+progressBar.lua
+xpBar.lua
+reputationBar.lua
+artifactBar.lua
+honorBar.lua
