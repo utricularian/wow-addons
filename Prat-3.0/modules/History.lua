@@ -125,7 +125,7 @@ Prat:AddModuleToLoad(function()
 	delaygmotd_name = "GMOTD verzögern",
 	divider = "======= Ende der Aufzeichnungen =======",
 	History = "Verlauf",
-	["Maximum number of lines of command history to save."] = "Maximal zu speichernde Zeilenanzahl des Befehlverlaufs.",
+	["Maximum number of lines of command history to save."] = "Maximal zu speichernde Zeilenanzahl des Befehlsverlaufs.",
 	["Save Command History"] = "Befehlsverlauf speichern",
 	["Saves command history between sessions (for use with alt+up arrow or just the up arrow)"] = "Speichert Befehlsverlauf zwischen Sitzungen (um mit Alt + \"Pfeil nach oben\" oder nur \"Pfeil nach oben\" verwendet zu werden).",
 	Scrollback = "Aufzeichnung",

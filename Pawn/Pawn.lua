@@ -7,7 +7,7 @@
 -- Main non-UI code
 ------------------------------------------------------------
 
-PawnVersion = 2.0011
+PawnVersion = 2.0013
 
 -- Pawn requires this version of VgerCore:
 local PawnVgerCoreVersionRequired = 1.09
@@ -3357,14 +3357,14 @@ end
 --		Additional fields can be present.
 -- Returns: List
 --	List: The same table passed in, with one additional field added: { ..., Result }
---		Result: "upgrade" if the item is an upgrade, "vendor" if the item is the most valuable choice, "trinket" if the item is a trinket, or nil if none of the above.
+--		Result: "upgrade" if the item is an upgrade, "vendor" if the item is the most valuable choice, "trinket" if the item is a trinket or relic, or nil if none of the above.
 function PawnFindInterestingItems(List)
 	local Info, _
 	local HighestValue, HighestValueInfo = 0, nil
 	local DoNotVendor
 	
 	for _, Info in pairs(List) do
-		if Info.Item.InvType == "INVTYPE_TRINKET" then
+		if Info.Item.InvType == "INVTYPE_TRINKET" or (Info.Item.ID and IsArtifactRelicItem(Info.Item.ID)) then
 			Info.Result = "trinket"
 		end
 		if Info.Usable and PawnIsItemAnUpgrade(Info.Item) then
@@ -3372,7 +3372,7 @@ function PawnFindInterestingItems(List)
 			Info.Result = "upgrade"
 			-- If it's a choice item, then we shouldn't pick a choice item to vendor.
 			if Info.RewardType == "choice" then DoNotVendor = true end
-		elseif Info.RewardType == "choice" and Info.Item.InvType == "INVTYPE_TRINKET" then
+		elseif Info.RewardType == "choice" and (Info.Item.InvType == "INVTYPE_TRINKET" or (Info.Item.ID and IsArtifactRelicItem(Info.Item.ID))) then
 			-- If one of the choices is a trinket, don't mark any items as vendor items.
 			DoNotVendor = true
 		elseif (not DoNotVendor) and Info.RewardType == "choice" then
@@ -3400,7 +3400,6 @@ function PawnIsArmorBestTypeForPlayer(Item)
 	if not Stats then return false end
 	-- If the item isn't armor then we don't need to check anything.	
 	if (not Stats.IsCloth) and (not Stats.IsLeather) and (not Stats.IsMail) and (not Stats.IsPlate) then return true end
-	-- At level 40 some classes learn a new type of armor.
 	-- Before level 50 it's fine if the player is wearing the wrong type of armor.
 	local Level = UnitLevel("player")
 	local IsLevelForSpecialization = (Level >= 50)

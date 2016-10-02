@@ -2152,7 +2152,7 @@ function PawnUI_OnQuestInfo_ShowRewards()
 				Overlay:SetTexture("Interface\\AddOns\\Pawn\\Textures\\UpgradeArrowBig")
 				Overlay:SetTexCoord(0, .5, .5, 1)
 				Overlay:Show()
-			elseif Reward.Result == "trinket" then
+			elseif Reward.Result == "trinket" then -- trinkets or relics
 				Overlay:SetTexture("Interface\\AddOns\\Pawn\\Textures\\UpgradeArrowBig")
 				Overlay:SetTexCoord(.5, 1, .5, 1)
 				Overlay:Show()

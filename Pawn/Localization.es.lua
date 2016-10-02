@@ -4,7 +4,8 @@
 -- See Readme.htm for more information.
 
 -- 
--- European Spanish resources
+-- Spanish (European and Latin American) resources
+-- See special cases at the end of the file!
 ------------------------------------------------------------
 
 local function PawnUseThisLocalization()
@@ -16,7 +17,7 @@ PawnLocal =
 	CopyScaleEnterName = "Introduce un nombre para tu nueva escala, una copia de %s:",
 	DebugOffCommand = "debug off",
 	DebugOnCommand = "debug on",
-	DecimalSeparator = ",",
+	DecimalSeparator = ".",
 	DeleteScaleConfirmation = "¿Está seguro de que desea eliminar %s? Esta acción no se puede deshacer. Escriba \"%s\" para confirmar:",
 	DidntUnderstandMessage = "   (?) No entendo \"%s\".",
 	EnchantedStatsHeader = "(Valor actual)",
@@ -50,7 +51,7 @@ PawnLocal =
 	RenameScaleEnterName = "Escribe un nuevo nombre para %s:",
 	SocketBonusValueCalculationMessage = "   -- La ranura extra valdrá: %g",
 	StatNameText = "1 de |cffffffff%s|r vale:",
-	ThousandsSeparator = ".",
+	ThousandsSeparator = ",",
 	TooltipBestAnnotation = "%s  |cff8ec3e6(El mejor)|r",
 	TooltipBestAnnotationSimple = "%s  El mejor",
 	TooltipBigUpgradeAnnotation = "%s  |TInterface\\AddOns\\Pawn\\Textures\\UpgradeArrow:0|t|cff00ff00 mejora%s|r",
@@ -550,8 +551,14 @@ Para más información sobre éstas opciones, consulta el archivo leeme.]=],
 }
 end 
 
-if GetLocale() == "esES" or GetLocale() == "esMX" then 
+if GetLocale() == "esES" then
+	PawnUseThisLocalization()
+	PawnLocal.ThousandsSeparator = "."
+	PawnLocal.DecimalSeparator = ","
+elseif GetLocale() == "esMX" then 
    PawnUseThisLocalization() 
+	PawnLocal.ThousandsSeparator = ","
+	PawnLocal.DecimalSeparator = "."
 end 
 
 -- After using this localization or deciding that we don't need it, remove it from memory.
