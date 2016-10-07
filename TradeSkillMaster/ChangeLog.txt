@@ -1,3 +1,21 @@
+v3.6.6
+*Fixed potential bug with detecting soulbound items.
+
+v3.6.5
+*Improve caching of soulbound items.
+
+v3.6.4
+*Added caching of bag inventory.
+*Fixed issues with detecting soulbound BOA items.
+
+v3.6.3
+*Fixed issue with scan results getting cleared.
+
+v3.6.2
+*Fixed importing of large groups causing interface lag and errors.
+*Fixed bug with importing of BoA items.
+*Fixed potential duplicate scan results from some queries.
+
 v3.6.1
 *Fixed a bug with scan speed optimization for some items.
 

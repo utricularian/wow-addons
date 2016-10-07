@@ -1,8 +1,0 @@
-2016-10-02  sylvanaar  <sylvanaar@mindspring.com>
-
-[2cf1abd25b9f] [3.6.15]
-* modules/PlayerNames.lua:
-
-Ambiguate the player name before looking up it's information for use in coloring. Restores level numbers missing because the playerlink contained the name-server, but /who only was successful with the name alone. Needs more testing with combined realms.
-
-

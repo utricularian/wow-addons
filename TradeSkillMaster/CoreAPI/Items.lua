@@ -183,6 +183,7 @@ function TSMAPI.Item:IsSoulbound(...)
 	if type(firstArg) == "string" then
 		TSMAPI:Assert(numArgs <= 2, "Too many arguments provided with itemString")
 		itemString, ignoreBOA = ...
+		itemString = TSMAPI.Item:ToItemString(itemString)
 		if strmatch(itemString, "^p:") then
 			-- battle pets are not soulbound
 			return
@@ -195,12 +196,20 @@ function TSMAPI.Item:IsSoulbound(...)
 		TSMAPI:Assert(false, "Invalid arguments")
 	end
 	local itemLink = bag and slot and GetContainerItemLink(bag, slot)
-	if itemLink and private.soulboundCache[itemLink] then
-		return private.soulboundCache[itemLink]
+	local cacheItem = bag and slot and itemLink or itemString
+	if cacheItem then
+		if not private.soulboundCache[cacheItem] then
+			private.soulboundCache[cacheItem] = { result = nil, resultIgnoreBOA = nil }
+		end
+		if ignoreBOA and private.soulboundCache[cacheItem].resultIgnoreBOA ~= nil then
+			return private.soulboundCache[cacheItem].resultIgnoreBOA
+		elseif not ignoreBOA and private.soulboundCache[cacheItem].result ~= nil then
+			return private.soulboundCache[cacheItem].result
+		end
 	end
 
 	local scanTooltip = private.GetScanTooltip()
-	local result = nil
+	local result = false
 	if itemString then
 		-- it's an itemString
 		scanTooltip:SetHyperlink(private.ToWoWItemString(itemString))
@@ -228,7 +237,8 @@ function TSMAPI.Item:IsSoulbound(...)
 		return result
 	end
 
-	for id=1, scanTooltip:NumLines() do
+	local numLines = scanTooltip:NumLines()
+	for id=1, numLines do
 		local text = private.GetTooltipText(_G[scanTooltip:GetName().."TextLeft"..id])
 		if text then
 			if (text == ITEM_BIND_ON_PICKUP and id < 4) or text == ITEM_SOULBOUND or text == ITEM_BIND_QUEST then
@@ -239,8 +249,12 @@ function TSMAPI.Item:IsSoulbound(...)
 		end
 	end
 
-	if itemLink then
-		private.soulboundCache[itemLink] = result
+	if cacheItem and numLines > 2 then
+		if ignoreBOA then
+			private.soulboundCache[cacheItem].resultIgnoreBOA = result
+		elseif not ignoreBOA then
+			private.soulboundCache[cacheItem].result = result
+		end
 	end
 
 	return result
@@ -1005,7 +1019,6 @@ function private:FixItemString(itemString)
 			if lastExtraPart < UPGRADE_VALUE_SHIFT then
 				lastExtraPart = lastExtraPart + UPGRADE_VALUE_SHIFT
 			end
-			-- itemString = gsub(itemString, ":"..count..":", ":"..(count+1)..":")
 			itemString = itemString..":"..lastExtraPart
 		end
 		itemString = private.RemoveExtra(itemString)

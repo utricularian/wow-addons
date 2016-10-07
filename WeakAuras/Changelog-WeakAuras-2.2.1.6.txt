@@ -1,0 +1,54 @@
+tag 2.2.1.6
+ade75afe975cab06e274ba8a9b2cd3227a3696de
+Benjamin Staneck <staneck@gmail.com>
+2016-10-06 21:43:57 +0200
+
+
+
+--------------------
+
+Infus:
+	- Change how we assign frame levels to regions
+	- Always start at frame level 1
+	- Increase frame levels by 4 per region, so that each region
+	  can use a few frame levels for its childrens
+	- In Aurabar make the child frame levels depend on the parent
+	  frame level
+	
+	In my tests with a group, all combinations of region types are
+	now work
+	
+	Ticket-Nr: 743
+	- Fix dynamic groups not attached to their regions
+	In commit 2ba0799 I introduced some optimization to make editing huge
+	dynamic groups faster, since apparently SetPoint() is a far more
+	expansive operation in Legion than before.
+	
+	That optimization was incorrect, and broke if a aura was e.g. moved
+	out of a dynamic group and into it again.
+	
+	Fix that optimization by checking against what GetPoint() returns
+	
+	Ticket-Nr: 680
+Benjamin Staneck:
+	- also fallback to instance chat when using the smart announce function and in a lfd group
+Infus:
+	- Rune of Power: Fix load condition
+	- Small change to circular progress flickering
+	While I couldn't reproduce the bug report, and scockah can no longer
+	either, since it is apparently related to low frame rates, this
+	change should have helped. Instead of using a very fast animation,
+	it manually sets the progress to 1.
+	
+	Ticket-Nr: 632
+	- Animations: Don't createa a onFinihsed method for loops
+	As each onFinished function would catpure it's predecessorts, this
+	would end up keeping a stack of onFinished functions alive and thus
+	would slow down the garbarge collector.
+	
+	Instead, don't create any garbarge.
+	
+	Ticket-Nr: 724
+	- Templastes: Small tweak
+	- Fix trigger texts not updating
+	Ticket-Nr: 735
