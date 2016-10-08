@@ -963,6 +963,38 @@ GTFO.SpellID["210315"] = {
   sound = 3;
 };
 
+GTFO.SpellID["222043"] = {
+  --desc = "Crushing Darkness (Creature in the Shadows)";
+  sound = 3;
+};
+
+GTFO.SpellID["205595"] = {
+  --desc = "Tormenting Swipe (Corruption Horror)";
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["207859"] = {
+  --desc = "Darkened Discharge (Xavius)";
+  sound = 3;
+  negatingDebuffSpellID = 206651;
+  negatingIgnoreTime = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["225249"] = {
+  --desc = "Devastating Stomp (Deathroot Ancient)";
+  applicationOnly = true;
+  sound = 3;
+  tankSound = 0;
+};
+
+GTFO.SpellID["225296"] = {
+  --desc = "Rotting Grasp (Deathroot Ancient)";
+  sound = 3;
+  tankSound = 0;
+};
+
 -- *************
 -- * Nighthold *
 -- *************

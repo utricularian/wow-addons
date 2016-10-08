@@ -1,11 +1,31 @@
 ------------------------------------------------------------------------
-r263 | zensunim | 2016-09-29 15:52:01 +0000 (Thu, 29 Sep 2016) | 3 lines
+r266 | zensunim | 2016-10-07 05:54:40 +0000 (Fri, 07 Oct 2016) | 3 lines
 Changed paths:
-   A /tags/4.40.1 (from /trunk:262)
+   A /tags/4.40.2 (from /trunk:265)
 
-4.40.1
-* Fixed Legion spells for The Emerald Nightmare
+4.40.2
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for The Emerald Nightmare
+------------------------------------------------------------------------
+r265 | zensunim | 2016-10-07 05:54:22 +0000 (Fri, 07 Oct 2016) | 1 line
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_LGN.lua
+   M /trunk/GTFO_Spells_LGN.lua
 
+4.40.2 prep
+------------------------------------------------------------------------
+r264 | zensunim | 2016-09-30 07:12:24 +0000 (Fri, 30 Sep 2016) | 2 lines
+Changed paths:
+   M /trunk/GTFO.lua
+   M /trunk/GTFO.toc
+   M /trunk/GTFO_Fail_LGN.lua
+   M /trunk/GTFO_Spells_LGN.lua
+   M /trunk/ReadMe.txt
+
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for The Emerald Nightmare
 ------------------------------------------------------------------------
 r262 | zensunim | 2016-09-29 15:51:31 +0000 (Thu, 29 Sep 2016) | 1 line
 Changed paths:
@@ -187,10 +207,4 @@ Changed paths:
    M /trunk/GTFO_Spells_LGN.lua
 
 Added Hunter BM artifact quest, Druid Guardian artifact quest
-------------------------------------------------------------------------
-r235 | zensunim | 2016-08-23 15:22:22 +0000 (Tue, 23 Aug 2016) | 1 line
-Changed paths:
-   M /trunk/GTFO.toc
-
-Fixed TOC
 ------------------------------------------------------------------------

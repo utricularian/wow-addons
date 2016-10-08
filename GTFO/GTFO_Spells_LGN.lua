@@ -247,7 +247,11 @@ GTFO.SpellID["202544"] = {
   sound = 1;
 };
 
-
+GTFO.SpellID["169002"] = {
+  --desc = "Torrent of Blades (Legion Battlematron)";
+  sound = 1;
+  tankSound = 0;
+};
 
 -- **********
 -- * Mardum *
@@ -751,7 +755,17 @@ GTFO.FFSpellID["203097"] = {
   negatingBuffSpellID = 203096; -- Rot
 };
 
+GTFO.SpellID["223946"] = {
+  --desc = "Dark Lightning (Guardian Rurson)";
+  sound = 1;
+};
+
 GTFO.SpellID["205611"] = {
+  --desc = "Miasma (Ursoc)";
+  sound = 1;
+};
+
+GTFO.SpellID["212238"] = {
   --desc = "Miasma (Ursoc)";
   sound = 1;
 };
@@ -776,6 +790,10 @@ GTFO.SpellID["214712"] = {
   sound = 1;
 };
 
+GTFO.SpellID["211634"] = {
+  --desc = "The Infinite Dark (Xavius)";
+  sound = 1;
+};
 
 -- *************
 -- * Nighthold *
