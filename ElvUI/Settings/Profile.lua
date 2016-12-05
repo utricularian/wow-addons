@@ -33,6 +33,13 @@ P['general'] = {
 	['minimap'] = {
 		['size'] = 176,
 		['locationText'] = 'MOUSEOVER',
+		["locationFontSize"] = 12,
+		["locationFontOutline"] = "OUTLINE",
+		["locationFont"] = "PT Sans Narrow",
+		["resetZoom"] = {
+			["enable"] = false,
+			["time"] = 3,
+		},
 		['icons'] = {
 			['classHall'] = {
 				['scale'] = 0.8,
@@ -165,9 +172,9 @@ P['bags'] = {
 	['moneyFormat'] = 'SMART',
 	['moneyCoins'] = true,
 	["junkIcon"] = false,
+	["upgradeIcon"] = true,
 	['ignoredItems'] = {},
 	['itemLevel'] = true,
-	["useTooltipScanning"] = true,
 	['itemLevelThreshold'] = 1,
 	['itemLevelFont'] = 'Homespun',
 	['itemLevelFontSize'] = 10,
@@ -185,6 +192,7 @@ P['bags'] = {
 		['sortDirection'] = 'ASCENDING',
 		['size'] = 30,
 		['spacing'] = 4,
+		["backdropSpacing"] = 4,
 		['showBackdrop'] = false,
 		['mouseover'] = false,
 	},
@@ -242,6 +250,7 @@ P["nameplates"] = {
 			['enable'] = false,
 			["alwaysShow"] = false,
 			["clickthrough"] = false,
+			["combatFade"] = false,
 			['healthbar'] = {
 				['enable'] = true,
 				['height'] = 10,
@@ -272,6 +281,7 @@ P["nameplates"] = {
 				["hideTime"] = false,
 				["castTimeFormat"] = "CURRENT",
 				["channelTimeFormat"] = "CURRENT",
+				["timeToHold"] = 0,
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -330,6 +340,7 @@ P["nameplates"] = {
 				["hideTime"] = false,
 				["castTimeFormat"] = "CURRENT",
 				["channelTimeFormat"] = "CURRENT",
+				["timeToHold"] = 0,
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -390,6 +401,7 @@ P["nameplates"] = {
 				["hideTime"] = false,
 				["castTimeFormat"] = "CURRENT",
 				["channelTimeFormat"] = "CURRENT",
+				["timeToHold"] = 0,
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -449,6 +461,7 @@ P["nameplates"] = {
 				["hideTime"] = false,
 				["castTimeFormat"] = "CURRENT",
 				["channelTimeFormat"] = "CURRENT",
+				["timeToHold"] = 0,
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -506,6 +519,7 @@ P["nameplates"] = {
 				["hideTime"] = false,
 				["castTimeFormat"] = "CURRENT",
 				["channelTimeFormat"] = "CURRENT",
+				["timeToHold"] = 0,
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -568,6 +582,7 @@ P["nameplates"] = {
 				["hideTime"] = false,
 				["castTimeFormat"] = "CURRENT",
 				["channelTimeFormat"] = "CURRENT",
+				["timeToHold"] = 0,
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -766,6 +781,7 @@ P['tooltip'] = {
 		['height'] = 7,
 		['font'] = 'Homespun',
 		['fontSize'] = 10,
+		['statusPosition'] = "BOTTOM",
 	},
 	["useCustomFactionColors"] = false,
 	["factionColors"] = {
@@ -924,6 +940,13 @@ P['unitframe'] = {
 				['text_format'] = '||cFFB04F4F[pvptimer][mouseover]||r',
 				['xOffset'] = 0,
 				['yOffset'] = 0,
+			},
+			["pvpIcon"] = {
+				["enable"] = false,
+				["anchorPoint"] = "CENTER",
+				["xOffset"] = 0,
+				["yOffset"] = 0,
+				["scale"] = 1,
 			},
 			['portrait'] = {
 				['enable'] = false,
@@ -1094,6 +1117,13 @@ P['unitframe'] = {
 				['yOffset'] = 0,
 				['attachTextTo'] = 'Health',
 			},
+			["pvpIcon"] = {
+				["enable"] = false,
+				["anchorPoint"] = "CENTER",
+				["xOffset"] = 0,
+				["yOffset"] = 0,
+				["scale"] = 1,
+			},
 			['portrait'] = {
 				['enable'] = false,
 				['width'] = 45,
@@ -1186,14 +1216,6 @@ P['unitframe'] = {
 				["attachToObject"] = "Frame",
 				['xOffset'] = 0,
 				['yOffset'] = 8,
-			},
-			['GPSArrow'] = {
-				['enable'] = false,
-				['size'] = 45,
-				['xOffset'] = 0,
-				['yOffset'] = 0,
-				['onMouseOver'] = true,
-				['outOfRange'] = true
 			},
 		},
 		['targettarget'] = {
@@ -1524,14 +1546,6 @@ P['unitframe'] = {
 				["attachToObject"] = "Frame",
 				['xOffset'] = 0,
 				['yOffset'] = 8,
-			},
-			['GPSArrow'] = {
-				['enable'] = false,
-				['size'] = 45,
-				['xOffset'] = 0,
-				['yOffset'] = 0,
-				['onMouseOver'] = true,
-				['outOfRange'] = true
 			},
 		},
 		['focustarget'] = {
@@ -2257,14 +2271,6 @@ P['unitframe'] = {
 				['xOffset'] = 0,
 				['yOffset'] = 8,
 			},
-			['GPSArrow'] = {
-				['enable'] = true,
-				['size'] = 45,
-				['xOffset'] = 0,
-				['yOffset'] = 0,
-				['onMouseOver'] = true,
-				['outOfRange'] = true
-			},
 		},
 		['raid'] = {
 			['enable'] = true,
@@ -2421,14 +2427,6 @@ P['unitframe'] = {
 				['xOffset'] = 0,
 				['yOffset'] = 8,
 			},
-			['GPSArrow'] = {
-				['enable'] = true,
-				['size'] = 40,
-				['xOffset'] = 0,
-				['yOffset'] = 0,
-				['onMouseOver'] = true,
-				['outOfRange'] = true
-			},
 		},
 		['raid40'] = {
 			['enable'] = true,
@@ -2584,14 +2582,6 @@ P['unitframe'] = {
 				["attachToObject"] = "Frame",
 				['xOffset'] = 0,
 				['yOffset'] = 8,
-			},
-			['GPSArrow'] = {
-				['enable'] = false,
-				['size'] = 45,
-				['xOffset'] = 0,
-				['yOffset'] = 0,
-				['onMouseOver'] = true,
-				['outOfRange'] = true
 			},
 		},
 		['raidpet'] = {
@@ -2942,6 +2932,8 @@ P["actionbar"] = {
 
 	['globalFadeAlpha'] = 0,
 	["lockActionBars"] = true,
+	["hideCooldownBling"] = false,
+	["useDrawSwipeOnCharges"] = false,
 
 	['bar1'] = {
 		['enabled'] = true,

@@ -195,16 +195,14 @@ function TSMAPI.Item:IsSoulbound(...)
 	else
 		TSMAPI:Assert(false, "Invalid arguments")
 	end
-	local itemLink = bag and slot and GetContainerItemLink(bag, slot)
-	local cacheItem = bag and slot and itemLink or itemString
-	if cacheItem then
-		if not private.soulboundCache[cacheItem] then
-			private.soulboundCache[cacheItem] = { result = nil, resultIgnoreBOA = nil }
+	if itemString then
+		if not private.soulboundCache[itemString] then
+			private.soulboundCache[itemString] = { result = nil, resultIgnoreBOA = nil }
 		end
-		if ignoreBOA and private.soulboundCache[cacheItem].resultIgnoreBOA ~= nil then
-			return private.soulboundCache[cacheItem].resultIgnoreBOA
-		elseif not ignoreBOA and private.soulboundCache[cacheItem].result ~= nil then
-			return private.soulboundCache[cacheItem].result
+		if ignoreBOA and private.soulboundCache[itemString].resultIgnoreBOA ~= nil then
+			return private.soulboundCache[itemString].resultIgnoreBOA
+		elseif not ignoreBOA and private.soulboundCache[itemString].result ~= nil then
+			return private.soulboundCache[itemString].result
 		end
 	end
 
@@ -249,11 +247,14 @@ function TSMAPI.Item:IsSoulbound(...)
 		end
 	end
 
-	if cacheItem and numLines > 2 then
+	if not result and numLines <= 1 then
+		-- the tooltip didn't fully load
+		return nil
+	elseif itemString then
 		if ignoreBOA then
-			private.soulboundCache[cacheItem].resultIgnoreBOA = result
+			private.soulboundCache[itemString].resultIgnoreBOA = result
 		elseif not ignoreBOA then
-			private.soulboundCache[cacheItem].result = result
+			private.soulboundCache[itemString].result = result
 		end
 	end
 
@@ -369,9 +370,9 @@ function Items:ScanMerchant(event)
 	for i=1, GetMerchantNumItems() do
 		local itemString = TSMAPI.Item:ToItemString(GetMerchantItemLink(i))
 		if itemString then
-			local price, _, _, _, extendedCost = select(3, GetMerchantItemInfo(i))
+			local price, quantity, _, _, extendedCost = select(3, GetMerchantItemInfo(i))
 			if price > 0 and not extendedCost then
-				TSM.db.global.vendorItems[itemString] = price
+				TSM.db.global.vendorItems[itemString] = TSMAPI.Util:Round(price / quantity)
 			else
 				TSM.db.global.vendorItems[itemString] = nil
 			end
@@ -439,6 +440,8 @@ function private.SaveItemCache()
 	-- store the result
 	TSMItemCacheDB = result
 	TSM.db.global.locale = GetLocale()
+	-- store the current interface version to know whether the cache should be reset
+	TSM.db.global.itemCacheVersion = select(4, GetBuildInfo())
 end
 
 function private.DecodeNumber(str, length, offset)
@@ -465,6 +468,10 @@ end
 function private.LoadItemCache()
 	-- check if the locale changed, in which case we won't load the cache
 	if TSM.db.global.locale ~= "" and TSM.db.global.locale ~= GetLocale() then return end
+	
+	-- check if the interface version changed, in which case we won't load the cache
+	local interfaceVersion = select(4, GetBuildInfo())
+	if TSM.db.global.itemCacheVersion < interfaceVersion then return end
 
 	local str = TSMItemCacheDB
 	if type(str) ~= "string" or #str < 4 then return end
@@ -515,52 +522,6 @@ function private.LoadItemCache()
 	TSM:LOG_INFO("Loaded item data")
 	return result
 end
-
-function TSMAPI.Item:CanUse(itemString)
-	itemString = TSMAPI.Item:ToItemString(itemString)
-	if not itemString then return end
-	if private.canUseCache[itemString] ~= nil then return private.canUseCache[itemString] end
-	local classId = TSMAPI.Item:GetClassId(itemString)
-	local subClassId = TSMAPI.Item:GetSubClassId(itemString)
-	if not classId or not subClassId then return end
-
-	local result = true
-	if classId == LE_ITEM_CLASS_BATTLEPET or classId == LE_ITEM_CLASS_RECIPE or classId == LE_ITEM_CLASS_MISCELLANEOUS or (classId == LE_ITEM_CLASS_CONSUMABLE and subClassId == 8) then
-		-- can't currently determine if these are usable based on tooltip scanning
-		result = false
-	else
-		local scanTooltip = private.GetScanTooltip()
-		scanTooltip:SetHyperlink(private.ToWoWItemString(itemString))
-		local prevR, prevG, prevB = 0, 0, 0
-		for id = 1, scanTooltip:NumLines() do
-			local lText, lR, lG, lB = private.GetTooltipText(_G[scanTooltip:GetName().."TextLeft"..id])
-			local rText, rR, rG, rB = private.GetTooltipText(_G[scanTooltip:GetName().."TextRight"..id])
-			if lText and lR == 255 and lG == 32 and lB == 32 then
-				if id == 1 and scanTooltip:NumLines() == 1 then
-					-- probably still retrieving item info
-					return
-				end
-				if id <= 3 or prevR ~= 255 or prevG ~= 210 or prevB ~= 0 then
-					result = false
-					break
-				end
-			end
-			if rText and rR == 255 and rG == 32 and rB == 32 then
-				result = false
-				break
-			end
-			if lText then
-				prevR = lR
-				prevG = lG
-				prevB = lB
-			end
-		end
-	end
-	private.canUseCache[itemString] = result
-	return result
-end
-
-
 
 -- ============================================================================
 -- Item Info Thread

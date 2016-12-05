@@ -9,13 +9,12 @@
 -- This file contains code for scanning the auction house
 local TSM = select(2, ...)
 local L = LibStub("AceLocale-3.0"):GetLocale("TradeSkillMaster") -- loads the localization table
-local private = {callbackHandler=nil, scanThreadId=nil, database=nil, currentModule=nil, pageTemp=nil, optimize=nil, usableOptimize=true}
+local private = {callbackHandler=nil, scanThreadId=nil, database=nil, currentModule=nil, pageTemp=nil, optimize=nil}
 -- some constants
 local SCAN_THREAD_PRIORITY = 0.8
 local SCAN_RESULT_DELAY = 0.1
 local MAX_SOFT_RETRIES = 20
 local MAX_HARD_RETRIES = 2
-local MAX_AUCTION_PER_PAGE_USABLE = 1500
 
 
 
@@ -37,9 +36,7 @@ function TSMAPI.Auction:ScanQuery(module, query, callbackHandler, resolveSellers
 	private.callbackHandler = callbackHandler
 	private.database = database
 	private.currentModule = module
-	if query.usable then
-		private.usableOptimize = {}
-	elseif query.name ~= "" and (not query.items or #query.items == 1) then
+	if query.name ~= "" and (not query.items or #query.items == 1) then
 		private.optimize = true
 	end
 	TSM:SetAuctionTabFlashing(private.currentModule, true)
@@ -153,7 +150,6 @@ function TSMAPI.Auction:StopScan(module)
 
 	TSM:SetAuctionTabFlashing(private.currentModule, false) -- stop flashing the tab of the current module
 	private.currentModule = nil
-	private.usableOptimize = nil
 	private.optimize = nil
 	private.scanThreadId = nil
 	private.callbackHandler = nil
@@ -249,8 +245,7 @@ function private:IsAuctionPageValid(resolveSellers)
 	if numAuctions == 0 then return true end
 
 	local numLinks, prevLink = 0, nil
-	numAuctions = min(numAuctions, private.usableOptimize and MAX_AUCTION_PER_PAGE_USABLE or NUM_AUCTION_ITEMS_PER_PAGE)
-	for i = 1, numAuctions do
+	for i=1, numAuctions do
 		-- checks to make sure all the data has been sent to the client
 		-- if not, the data is bad and we'll wait / try again
 		local _, _, stackSize, _, _, _, _, minBid, minIncrement, buyout, bid, highBidder, _, seller, seller_full = GetAuctionItemInfo("list", i)
@@ -289,7 +284,7 @@ function private:StorePageResults(duplicateRecord)
 			private.pageTemp[i] = duplicateRecord
 		end
 	else
-		numAuctions = min(GetNumAuctionItems("list"), private.usableOptimize and MAX_AUCTION_PER_PAGE_USABLE or NUM_AUCTION_ITEMS_PER_PAGE)
+		numAuctions = GetNumAuctionItems("list")
 		private.pageTemp = {}
 		if numAuctions == 0 then return end
 
@@ -342,7 +337,12 @@ function private.ScanThreadDoQuery(self, query)
 
 	-- send the query
 	if not query.filterInfoCache and (query.class or query.subClass or query.invType) then
-		query.filterInfoCache = {{classID=query.class, subClassID=query.subClass, inventoryType=query.invType}}
+		if query.invType == LE_INVENTORY_TYPE_CHEST_TYPE or query.invType == LE_INVENTORY_TYPE_ROBE_TYPE then
+			-- default AH sends in queries for both chest types, we need to mimic this when using a chest filter
+			query.filterInfoCache = {{classID=query.class, subClassID=query.subClass, inventoryType=LE_INVENTORY_TYPE_CHEST_TYPE}, {classID=query.class, subClassID=query.subClass, inventoryType=LE_INVENTORY_TYPE_ROBE_TYPE}}
+		else
+			query.filterInfoCache = {{classID=query.class, subClassID=query.subClass, inventoryType=query.invType}}
+		end		
 	end
 	QueryAuctionItems(query.name, query.minLevel, query.maxLevel, query.page, query.usable, query.quality, nil, query.exact, query.filterInfoCache)
 
@@ -453,52 +453,12 @@ function private.ScanAllPagesThread(self, query)
 				private:ScanCurrentPageThread(self, query, tempData)
 			end
 			query.page = query.page + MAX_SKIP + 1
-			numPages = private:GetNumPages()
-		elseif private.usableOptimize then
-			-- do a normal scan of this page
-			private:ScanCurrentPageThread(self, query, tempData)
-			query.page = query.page + MAX_AUCTION_PER_PAGE_USABLE / NUM_AUCTION_ITEMS_PER_PAGE
-			if GetNumAuctionItems("list") <= MAX_AUCTION_PER_PAGE_USABLE then
-				-- we're done
-				numPages = query.page
-			else
-				-- there are more pages to scan, but we don't know how many
-				numPages = math.huge
-			end
-			-- in some cases, the usable filter is broken, so liberally default to regular scanning if we think that has happened (once we've gone through all pages)
-			local usableBroken = nil
-			if query.page == numPages and query.items then
-				-- check if any items have no results (likely due to the bug)
-				for _, itemString in ipairs(query.items) do
-					local found = false
-					itemString = TSMAPI.Item:ToBaseItemString(itemString)
-					for _, record in ipairs(private.database.records) do
-						if record.baseItemString == itemString then
-							found = true
-							break
-						end
-					end
-					if not found then
-						usableBroken = itemString
-						break
-					end
-				end
-			end
-			if usableBroken then
-				-- revert to a normal scan
-				TSM:LOG_WARN("Usable broken (%s)", usableBroken)
-				private.database:RemoveRecords(private.usableOptimize)
-				private.usableOptimize = nil
-				query.usable = nil
-				query.page = 0
-				numPages = math.huge
-			end
 		else
 			-- do a normal scan of this page
 			private:ScanCurrentPageThread(self, query, tempData)
 			query.page = query.page + 1
-			numPages = private:GetNumPages()
 		end
+		numPages = private:GetNumPages()
 	end
 
 	private:DoCallback("SCAN_COMPLETE")
@@ -509,7 +469,7 @@ function private.ScanLastPageThread(self)
 	-- wait for the AH to be ready
 	self:Sleep(0.1)
 	while not CanSendAuctionQuery() do self:Yield(true) end
-
+	
 	-- get to the last page of the AH
 	local lastPage = private:GetLastPage()
 	local query = {name="", page=lastPage}
@@ -521,7 +481,7 @@ function private.ScanLastPageThread(self)
 		onLastPage = (query.page == lastPage)
 		query.page = lastPage
 	end
-
+	
 	-- check the result
 	for j=0, MAX_SOFT_RETRIES do
 		-- wait a small delay and then try and get the result
@@ -532,7 +492,7 @@ function private.ScanLastPageThread(self)
 			break
 		end
 	end
-
+	
 	-- scan the page and store the results then do the callback
 	private:StorePageResults()
 	private:DoCallback("SCAN_COMPLETE")

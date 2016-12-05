@@ -40,7 +40,7 @@ function TSMAPI.Inventory:BagIterator(autoBaseItems, includeSoulbound, includeBO
 		wipe(private.bagIteratorCache.items)
 		local isValid = true
 		for b = 0, NUM_BAG_SLOTS do
-			for s = 0, GetContainerNumSlots(b) do
+			for s = 1, GetContainerNumSlots(b) do
 				local link = GetContainerItemLink(b, s)
 				if link then
 					isValid = isValid and not strmatch(link, "\124h%[%]\124h")
@@ -73,10 +73,16 @@ function TSMAPI.Inventory:BagIterator(autoBaseItems, includeSoulbound, includeBO
 			shouldInclude = true
 		elseif includeBOA then
 			-- include BOA items
-			shouldInclude = not TSMAPI.Item:IsSoulbound(info.bag, info.slot, true)
+			if info.isSoulboundBOA == nil then
+				info.isSoulboundBOA = TSMAPI.Item:IsSoulbound(info.bag, info.slot, true)
+			end
+			shouldInclude = not info.isSoulboundBOA
 		else
 			-- include non-soulbound items
-			shouldInclude = not TSMAPI.Item:IsSoulbound(info.bag, info.slot)
+			if info.isSoulbound == nil then
+				info.isSoulbound = TSMAPI.Item:IsSoulbound(info.bag, info.slot)
+			end
+			shouldInclude = not info.isSoulbound
 		end
 		if not shouldInclude then
 			return iter()

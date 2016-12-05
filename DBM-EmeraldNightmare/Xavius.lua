@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1726, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15292 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15495 $"):sub(12, -3))
 mod:SetCreatureID(103769)
 mod:SetEncounterID(1864)
 mod:SetZone()
 mod:SetUsedIcons(6, 2, 1)
-mod:SetHotfixNoticeRev(15274)
+mod:SetHotfixNoticeRev(15369)
 mod.respawnTime = 15
 
 mod:RegisterCombat("combat")
@@ -66,7 +66,7 @@ local specWarnInconHorror				= mod:NewSpecialWarningSwitch("ej13162", "-Healer",
 
 --Stage One: The Decent Into Madness
 mod:AddTimerLine(SCENARIO_STAGE:format(1))
-local timerDarkeningSoulCD				= mod:NewCDTimer(7.2, 206651, nil, "Healer|Tank", nil, 5, nil, DBM_CORE_MAGIC_ICON..DBM_CORE_TANK_ICON)
+local timerDarkeningSoulCD				= mod:NewCDTimer(7, 206651, nil, "Healer|Tank", nil, 5, nil, DBM_CORE_MAGIC_ICON..DBM_CORE_TANK_ICON)
 local timerNightmareBladesCD			= mod:NewNextTimer(15.7, 206656, nil, nil, nil, 3)
 local timerLurkingEruptionCD			= mod:NewCDCountTimer(20.5, 208322, nil, nil, nil, 3)
 local timerCorruptionHorrorCD			= mod:NewNextCountTimer(82.5, 210264, nil, nil, nil, 1)
@@ -235,8 +235,13 @@ function mod:SPELL_CAST_START(args)
 		specWarnCorruptingNova:Show(args.sourceName)
 		voiceCorruptingNova:Play("aesoon")
 	elseif spellId == 209443 then
-		timerNightmareInfusionCD:Start()
-		countdownNightmareInfusion:Start()
+		if self.vb.phase == 3 then
+			timerNightmareInfusionCD:Start(31.5)
+			countdownNightmareInfusion:Start(31.5)
+		else
+			timerNightmareInfusionCD:Start()
+			countdownNightmareInfusion:Start()
+		end
 		local targetName, uId = self:GetBossTarget(args.sourceGUID, true)
 		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
 		if tanking or (status == 3) then
@@ -270,7 +275,7 @@ function mod:SPELL_CAST_SUCCESS(args)
 	elseif spellId == 210264 then
 		self.vb.corruptionHorror = self.vb.corruptionHorror + 1
 		specWarnCorruptionHorror:Show(self.vb.corruptionHorror)
-		voiceCorruptionHorror:Play("bigadd")
+		voiceCorruptionHorror:Play("bigmob")
 		timerCorruptionHorrorCD:Start(nil, self.vb.corruptionHorror+1)
 		countdownCorruptionHorror:Start()
 	end
@@ -290,9 +295,11 @@ function mod:SPELL_AURA_APPLIED(args)
 		warnDescentIntoMadness:CombinedShow(0.5, args.destName)
 		if args:IsPlayer() then
 			specWarnDescentIntoMadness:Show()
-			yellDescentIntoMadness:Schedule(19, 1)
-			yellDescentIntoMadness:Schedule(18, 2)
-			yellDescentIntoMadness:Schedule(17, 3)
+			if not playerHasDream then
+				yellDescentIntoMadness:Schedule(19, 1)
+				yellDescentIntoMadness:Schedule(18, 2)
+				yellDescentIntoMadness:Schedule(17, 3)
+			end
 		end
 	elseif spellId == 206651 then
 		local amount = args.amount or 1
@@ -541,6 +548,7 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		self.vb.phase = 3
 		warnPhase3:Show()
 		voicePhaseChange:Play("pthree")
+		timerBlackeningSoulCD:Stop()
 		timerBondsOfTerrorCD:Stop()
 		timerCallOfNightmaresCD:Stop()
 		countdownCallOfNightmares:Cancel()
@@ -548,12 +556,12 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		countdownMeteor:Cancel()
 		timerNightmareInfusionCD:Stop()
 		countdownNightmareInfusion:Cancel()
-		timerBlackeningSoulCD:Stop()
+		timerNightmareInfusionCD:Start(11)
+		countdownNightmareInfusion:Start(11)
 		timerBlackeningSoulCD:Start(15)
-		timerCorruptionMeteorCD:Start(21, 1)
-		countdownMeteor:Start(21)
-		timerNightmareBladesCD:Start(31)
-		timerNightmareInfusionCD:Start(36)
+		timerCorruptionMeteorCD:Start(20.5, 1)
+		countdownMeteor:Start(20.5)
+		timerNightmareBladesCD:Start(30)
 		self:UnregisterShortTermEvents()
 	elseif spellId == 226194 then--Writhing Deep
 		warnNightmareTentacles:Show()

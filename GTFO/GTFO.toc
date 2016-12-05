@@ -1,14 +1,10 @@
-## Interface: 70000
+## Interface: 70100
 ## Title: GTFO
 ## Notes: GTFO, you're dying!
 ## Author: Zensunim of Dragonblight
-## Version: 4.40.2
+## Version: 4.41.5
 ## DefaultState: Enabled
 ## SavedVariables: GTFOData
-## X-Curse-Packaged-Version: 4.40.2
-## X-Curse-Project-Name: GTFO
-## X-Curse-Project-ID: gtfo
-## X-Curse-Repository-ID: wow/gtfo/mainline
 Localization\enUS.lua
 Localization\esES.lua
 Localization\esMX.lua

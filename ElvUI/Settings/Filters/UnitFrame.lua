@@ -502,16 +502,14 @@ G.unitframe.aurafilters['RaidDebuffs'] = {
 		[213124] = Defaults(), -- Venomous Pool
 		[210850] = Defaults(), -- Twisting Shadows
 		[215489] = Defaults(), -- Venomous Pool
+		[218519] = Defaults(), -- Wind Burn (Mythic)
 
 	-- Il'gynoth, Heart of the Corruption
-		[210279] = Defaults(), -- Creeping Nightmares
-		[213162] = Defaults(), -- Nightmare Blast
-		[212681] = Defaults(), -- Cleansed Ground
-		[210315] = Defaults(), -- Nightmare Brambles
-		[211507] = Defaults(), -- Nightmare Javelin
-		[211471] = Defaults(), -- Scorned Touch
-		[208697] = Defaults(), -- Mind Flay
-		[215143] = Defaults(), -- Cursed Blood
+		[208929] = Defaults(),  -- Spew Corruption
+		[210984] = Defaults(),  -- Eye of Fate
+		[209469] = Defaults(5), -- Touch of Corruption
+		[208697] = Defaults(),  -- Mind Flay
+		[215143] = Defaults(),  -- Cursed Blood
 
 	-- Ursoc
 		[198108] = Defaults(), -- Unbalanced
@@ -522,16 +520,16 @@ G.unitframe.aurafilters['RaidDebuffs'] = {
 		[197980] = Defaults(), -- Nightmarish Cacophony
 
 	-- Dragons of Nightmare
-		[203102] = Defaults(), -- Mark of Ysondre
-		[203121] = Defaults(), -- Mark of Taerar
-		[203125] = Defaults(), -- Mark of Emeriss
-		[203124] = Defaults(), -- Mark of Lethon
-		[204731] = Defaults(), -- Wasting Dread
-		[203110] = Defaults(), -- Slumbering Nightmare
-		[207681] = Defaults(), -- Nightmare Bloom
-		[205341] = Defaults(), -- Sleeping Fog
-		[203770] = Defaults(), -- Defiled Vines
-		[203787] = Defaults(), -- Volatile Infection
+		[203102] = Defaults(),  -- Mark of Ysondre
+		[203121] = Defaults(),  -- Mark of Taerar
+		[203125] = Defaults(),  -- Mark of Emeriss
+		[203124] = Defaults(),  -- Mark of Lethon
+		[204731] = Defaults(5), -- Wasting Dread
+		[203110] = Defaults(5), -- Slumbering Nightmare
+		[207681] = Defaults(5), -- Nightmare Bloom
+		[205341] = Defaults(5), -- Sleeping Fog
+		[203770] = Defaults(5), -- Defiled Vines
+		[203787] = Defaults(5), -- Volatile Infection
 
 	-- Cenarius
 		[210279] = Defaults(), -- Creeping Nightmares
@@ -580,7 +578,7 @@ end
 
 G.unitframe.buffwatch = {
 	PRIEST = {
-		[194384] = ClassBuff(194384, "TOPRIGHT", {1, 0, 0.75}, true),        -- Atonement
+		[194384] = ClassBuff(194384, "TOPRIGHT", {1, 0, 0.75}),        -- Atonement
 		[41635] = ClassBuff(41635, "BOTTOMRIGHT", {0.2, 0.7, 0.2}),          -- Prayer of Mending
 		[139] = ClassBuff(139, "BOTTOMLEFT", {0.4, 0.7, 0.2}),               -- Renew
 		[17] = ClassBuff(17, "TOPLEFT", {0.81, 0.85, 0.1}, true),            -- Power Word: Shield

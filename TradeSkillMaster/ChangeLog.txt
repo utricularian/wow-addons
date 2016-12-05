@@ -1,3 +1,47 @@
+v3.6.20
+*Fixed bug with using chest inventory type Shopping search filters.
+
+v3.6.19
+*Fixed bug with auction buy/sell/cancel features and twitter integration when using ElvUI chat module.
+
+v3.6.18
+*Revert previous incorrect fixes.
+
+v3.6.17
+*Fixed bug with account sync and invalid players.
+
+v3.6.16
+*Fixed bug with auction buy/sell/cancel features and twitter integration
+
+v3.6.15
+*Updated destroy ratios for Legion ore / herbs
+
+v3.6.14
+*Fixed issue with item name changes not being detected after a patch update.
+
+v3.6.13
+*Fixed bug with scans not returning all results.
+
+v3.6.12
+*Updated TOC version for patch 7.1.
+*Fixed bug on non-connected realms caused by 7.1 changes.
+
+v3.6.11
+*Fixed bug causing AuctionDB to not properly load some region statistics.
+
+v3.6.10
+*Fixed a bug with parsing app data
+
+v3.6.9
+*Set twitter integration disabled by default.
+
+v3.6.8
+*Fixed bug causing interface lag in certain situations.
+
+v3.6.7
+*Fixed an issue with vendor buy price if items was sold in stacks (like crystal vials).
+*Fixed a bug with caching soulbound items that prevented bags from being sold if you had the same bag equipped.
+
 v3.6.6
 *Fixed potential bug with detecting soulbound items.
 

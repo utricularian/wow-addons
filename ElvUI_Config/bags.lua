@@ -73,14 +73,21 @@ E.Options.args.bags = {
 					desc = L["Display the junk icon on all grey items that can be vendored."],
 					set = function(info, value) E.db.bags[ info[#info] ] = value; B:UpdateAllBagSlots(); end,
 				},
-				clearSearchOnClose = {
+				upgradeIcon = {
 					order = 5,
+					type = 'toggle',
+					name = L["Show Upgrade Icon"],
+					desc = L["Display the upgrade icon on items that WoW considers an upgrade for your character."],
+					set = function(info, value) E.db.bags[ info[#info] ] = value; B:UpdateAllBagSlots(); end,
+				},
+				clearSearchOnClose = {
+					order = 6,
 					type = 'toggle',
 					name = L["Clear Search On Close"],
 					set = function(info, value) E.db.bags[info[#info]] = value; end
 				},
 				reverseLoot = {
-					order = 6,
+					order = 7,
 					type = "toggle",
 					name = REVERSE_NEW_LOOT_TEXT,
 					set = function(info, value)
@@ -89,19 +96,19 @@ E.Options.args.bags = {
 					end,
 				},
 				disableBagSort = {
-					order = 7,
+					order = 8,
 					type = "toggle",
 					name = L["Disable Bag Sort"],
 					set = function(info, value) E.db.bags[info[#info]] = value; B:ToggleSortButtonState(false); end
 				},
 				disableBankSort = {
-					order = 8,
+					order = 9,
 					type = "toggle",
 					name = L["Disable Bank Sort"],
 					set = function(info, value) E.db.bags[info[#info]] = value; B:ToggleSortButtonState(true); end
 				},
 				countGroup = {
-					order = 8,
+					order = 10,
 					type = "group",
 					name = L["Item Count Font"],
 					guiInline = true,
@@ -152,7 +159,7 @@ E.Options.args.bags = {
 					},
 				},
 				itemLevelGroup = {
-					order = 9,
+					order = 11,
 					type = "group",
 					name = L["Item Level"],
 					guiInline = true,
@@ -164,15 +171,8 @@ E.Options.args.bags = {
 							desc = L["Displays item level on equippable items."],
 							set = function(info, value) E.db.bags.itemLevel = value; B:UpdateItemLevelDisplay() end,
 						},
-						useTooltipScanning = {
-							order = 2,
-							type = 'toggle',
-							name = L["Use Tooltip Scanning"],
-							desc = L["This makes the item level display more reliable but uses more resources. If this is disabled then upgraded items will not show the correct item level."],
-							set = function(info, value) E.db.bags.useTooltipScanning = value; B:UpdateItemLevelDisplay() end,
-						},
 						itemLevelThreshold = {
-							order = 3,
+							order = 2,
 							name = L["Item Level Threshold"],
 							desc = L["The minimum item level required for it to be shown."],
 							type = 'range',
@@ -181,7 +181,7 @@ E.Options.args.bags = {
 							set = function(info, value) E.db.bags.itemLevelThreshold = value; B:UpdateItemLevelDisplay() end,
 						},
 						itemLevelFont = {
-							order = 4,
+							order = 3,
 							type = "select",
 							dialogControl = 'LSM30_Font',
 							name = L["Font"],
@@ -190,7 +190,7 @@ E.Options.args.bags = {
 							set = function(info, value) E.db.bags.itemLevelFont = value; B:UpdateItemLevelDisplay() end,
 						},
 						itemLevelFontSize = {
-							order = 5,
+							order = 4,
 							type = "range",
 							name = L["Font Size"],
 							min = 4, max = 212, step = 1,
@@ -198,7 +198,7 @@ E.Options.args.bags = {
 							set = function(info, value) E.db.bags.itemLevelFontSize = value; B:UpdateItemLevelDisplay() end,
 						},
 						itemLevelFontOutline = {
-							order = 6,
+							order = 5,
 							type = "select",
 							name = L["Font Outline"],
 							disabled = function() return not E.db.bags.itemLevel end,
@@ -279,33 +279,41 @@ E.Options.args.bags = {
 					get = function(info) return E.private.bags.bagBar end,
 					set = function(info, value) E.private.bags.bagBar = value; E:StaticPopup_Show("PRIVATE_RL") end
 				},
-				size = {
+				showBackdrop = {
 					order = 2,
+					type = 'toggle',
+					name = L["Backdrop"],
+				},
+				mouseover = {
+					order = 3,
+					name = L["Mouse Over"],
+					desc = L["The frame is not shown unless you mouse over the frame."],
+					type = "toggle",
+				},
+				size = {
+					order = 4,
 					type = 'range',
 					name = L["Button Size"],
 					desc = L["Set the size of your bag buttons."],
 					min = 24, max = 60, step = 1,
 				},
 				spacing = {
-					order = 3,
+					order = 5,
 					type = 'range',
 					name = L["Button Spacing"],
 					desc = L["The spacing between buttons."],
 					min = 1, max = 10, step = 1,
 				},
-				showBackdrop = {
-					order = 4,
-					type = 'toggle',
-					name = L["Backdrop"],
-				},
-				mouseover = {
-					order = 5,
-					name = L["Mouse Over"],
-					desc = L["The frame is not shown unless you mouse over the frame."],
-					type = "toggle",
+				backdropSpacing = {
+					order = 6,
+					type = 'range',
+					name = L["Backdrop Spacing"],
+					desc = L["The spacing between the backdrop and the buttons."],
+					min = 0, max = 10, step = 1,
+					disabled = function() return not E.private.actionbar.enable end,
 				},
 				sortDirection = {
-					order = 6,
+					order = 7,
 					type = 'select',
 					name = L["Sort Direction"],
 					desc = L["The direction that the bag frames will grow from the anchor."],

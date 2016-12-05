@@ -1138,12 +1138,14 @@ GTFO.SpellID["52659"] = {
 	--desc = "Static Overload (Ionar - Halls of Lightning)";
 	sound = 4;
 	ignoreSelfInflicted = true;
+	negatingBuffSpellID = 59795; -- Static Overload
 };
 
 GTFO.SpellID["59796"] = {
 	--desc = "Static Overload (Ionar - Halls of Lightning Heroic)";
 	sound = 4;
 	ignoreSelfInflicted = true;
+	negatingBuffSpellID = 59795; -- Static Overload
 };
 
 GTFO.SpellID["52671"] = {

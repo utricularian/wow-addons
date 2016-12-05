@@ -929,6 +929,7 @@ function E:UpdateAll(ignoreInstall)
 	local AB = self:GetModule('ActionBars')
 	AB.db = self.db.actionbar
 	AB:UpdateButtonSettings()
+	AB:UpdatePetCooldownSettings()
 	AB:UpdateMicroPositionDimensions()
 	AB:Extra_SetAlpha()
 	AB:Extra_SetScale()
@@ -999,7 +1000,7 @@ function E:UpdateAll(ignoreInstall)
 	LO:TopPanelVisibility()
 	LO:SetDataPanelStyle()
 
-	self:GetModule('Blizzard'):ObjectiveFrameHeight()
+	self:GetModule('Blizzard'):SetObjectiveFrameHeight()
 	
 	self:SetMoversClampedToScreen(true) --Go back to using clamp after resizing has taken place.
 
@@ -1251,7 +1252,7 @@ function E:DBConversions()
 end
 
 local CPU_USAGE = {}
-local function CompareCPUDiff(showall, module, minCalls)
+local function CompareCPUDiff(showall, minCalls)
 	local greatestUsage, greatestCalls, greatestName, newName, newFunc
 	local greatestDiff, lastModule, mod, newUsage, calls, differance = 0;
 
@@ -1314,7 +1315,7 @@ function E:GetTopCPUFunc(msg)
 		end
 	end
 
-	self:Delay(delay, CompareCPUDiff, showall, module, minCalls)
+	self:Delay(delay, CompareCPUDiff, showall, minCalls)
 	self:Print("Calculating CPU Usage differences (module: "..(module or "?")..", showall: "..tostring(showall)..", minCalls: "..tostring(minCalls)..", delay: "..tostring(delay)..")")
 end
 
@@ -1426,12 +1427,4 @@ function E:Initialize()
 			end
 		end)
 	end
-
-	--We need to set the real max distance after the slider control has been set up because it is reset at this point
-	--We only do this if the user had set max camera distance to "Far" in the options. At some point Blizzard will fix the resetting.
-	hooksecurefunc("BlizzardOptionsPanel_SetupControl", function(control)
-		if control == InterfaceOptionsCameraPanelMaxDistanceSlider and E:Round(tonumber(GetCVar("cameraDistanceMaxFactor")), 1) == 1.9 then
-			SetCVar("cameraDistanceMaxFactor", 2.6)
-		end
-	end)
 end

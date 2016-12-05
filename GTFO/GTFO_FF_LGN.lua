@@ -20,3 +20,8 @@ GTFO.FFSpellID["203097"] = {
   --desc = "Rot (Nythendra)";
   sound = 1;
 };
+
+GTFO.FFSpellID["203788"] = {
+  --desc = "Volatile Infection (Emeriss)";
+  sound = 1;
+};

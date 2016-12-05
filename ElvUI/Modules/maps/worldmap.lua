@@ -7,11 +7,11 @@ E.WorldMap = M
 local find = string.find
 --WoW API / Variables
 local CreateFrame = CreateFrame
-local InCombatLockdown = InCombatLockdown
-local SetUIPanelAttribute = SetUIPanelAttribute
-local IsInInstance = IsInInstance
-local GetPlayerMapPosition = GetPlayerMapPosition
 local GetCursorPosition = GetCursorPosition
+local GetPlayerMapPosition = GetPlayerMapPosition
+local InCombatLockdown = InCombatLockdown
+local SetCVar = SetCVar
+local SetUIPanelAttribute = SetUIPanelAttribute
 local PLAYER = PLAYER
 local MOUSE_LABEL = MOUSE_LABEL
 local WORLDMAP_FULLMAP_SIZE = WORLDMAP_FULLMAP_SIZE
@@ -19,8 +19,8 @@ local WORLDMAP_WINDOWED_SIZE = WORLDMAP_WINDOWED_SIZE
 
 --Global variables that we don't cache, list them here for mikk's FindGlobals script
 -- GLOBALS: WorldMapFrame, WorldMapFrameSizeUpButton, WorldMapFrameSizeDownButton
--- GLOBALS: UIParent, CoordsHolder, WorldMapDetailFrame, DropDownList1
--- GLOBALS: NumberFontNormal, WORLDMAP_SETTINGS, BlackoutWorld
+-- GLOBALS: UIParent, CoordsHolder, WorldMapDetailFrame, DropDownList1, WORLD_MAP_MIN_ALPHA
+-- GLOBALS: NumberFontNormal, WORLDMAP_SETTINGS, BlackoutWorld, WorldMapScrollFrame
 
 local INVERTED_POINTS = {
 	["TOPLEFT"] = "BOTTOMLEFT",
@@ -38,6 +38,9 @@ function M:SetLargeWorldMap()
 	WorldMapFrame:EnableKeyboard(false)
 	WorldMapFrame:SetScale(1)
 	WorldMapFrame:EnableMouse(true)
+	WorldMapTooltip:SetFrameStrata("TOOLTIP")
+	WorldMapCompareTooltip1:SetFrameStrata("TOOLTIP")
+	WorldMapCompareTooltip2:SetFrameStrata("TOOLTIP")
 
 	if WorldMapFrame:GetAttribute('UIPanelLayout-area') ~= 'center' then
 		SetUIPanelAttribute(WorldMapFrame, "area", "center");
@@ -72,8 +75,23 @@ function M:PLAYER_REGEN_DISABLED()
 	WorldMapFrameSizeUpButton:Disable()
 end
 
+local inRestrictedArea = false
+function M:PLAYER_ENTERING_WORLD()
+	local x = GetPlayerMapPosition("player")
+	if not x then
+		inRestrictedArea = true
+		self:CancelTimer(self.CoordsTimer)
+		self.CoordsTimer = nil
+		CoordsHolder.playerCoords:SetText("")
+		CoordsHolder.mouseCoords:SetText("")
+	elseif not self.CoordsTimer then
+		inRestrictedArea = false
+		self.CoordsTimer = self:ScheduleRepeatingTimer('UpdateCoords', 0.05)
+	end
+end
+
 function M:UpdateCoords()
-	if(not WorldMapFrame:IsShown()) then return end
+	if (not WorldMapFrame:IsShown() or inRestrictedArea) then return end
 	local x, y = GetPlayerMapPosition("player")
 	x = E:Round(100 * x, 2)
 	y = E:Round(100 * y, 2)
@@ -117,14 +135,7 @@ function M:PositionCoords()
 	CoordsHolder.mouseCoords:Point(position, CoordsHolder.playerCoords, INVERTED_POINTS[position], 0, y)
 end
 
-function M:ResetDropDownListPosition(frame)
-	--DropDownList1:ClearAllPoints()
-	--DropDownList1:Point("TOPRIGHT", frame, "BOTTOMRIGHT", -17, -4)
-end
-
 function M:Initialize()
-	--setfenv(WorldMapFrame_OnShow, setmetatable({ UpdateMicroButtons = function() end }, { __index = _G })) --blizzard taint fix
-
 	if(E.global.general.WorldMapCoordinates.enable) then
 		local CoordsHolder = CreateFrame('Frame', 'CoordsHolder', WorldMapFrame)
 		CoordsHolder:SetFrameLevel(WorldMapDetailFrame:GetFrameLevel() + 1)
@@ -138,8 +149,10 @@ function M:Initialize()
 		CoordsHolder.playerCoords:SetText(PLAYER..":   0, 0")
 		CoordsHolder.mouseCoords:SetText(MOUSE_LABEL..":   0, 0")
 
-		self:ScheduleRepeatingTimer('UpdateCoords', 0.05)
+		self.CoordsTimer = self:ScheduleRepeatingTimer('UpdateCoords', 0.05)
 		M:PositionCoords()
+
+		self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	end
 
 	if(E.global.general.smallerWorldMap) then

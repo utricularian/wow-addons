@@ -2,9 +2,10 @@ local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, Private
 
 --Cache global variables
 --Lua functions
-local GetTime = GetTime
+local floor = math.floor
 --WoW API / Variables
 local CreateFrame = CreateFrame
+local GetTime = GetTime
 local hooksecurefunc = hooksecurefunc
 
 --Global variables that we don't cache, list them here for the mikk's Find Globals script
@@ -123,11 +124,6 @@ function E:RegisterCooldown(cooldown)
 	hooksecurefunc(cooldown, "SetCooldown", E.OnSetCooldown)
 	cooldown.isHooked = true
 	cooldown:SetHideCountdownNumbers(true)
-	cooldown.SetHideCountdownNumbers = E.noop
-	if E.private.actionbar.hideCooldownBling then
-		cooldown:SetDrawBling(false)
-		cooldown.SetDrawBling = E.noop
-	end
 end
 
 function E:UpdateCooldownSettings()

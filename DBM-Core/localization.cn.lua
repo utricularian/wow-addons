@@ -1,8 +1,8 @@
-﻿-- DBM_Core
+-- DBM_Core
 -- Diablohu(diablohudream@gmail.com)
 -- yleaf(yaroot@gmail.com)
 -- Mini Dragon(projecteurs@gmail.com)
--- Last update: Aug 30 2016, 03:21 UTC@15178
+-- Last update: Oct 08 2016, 02:52 UTC@15334
 
 if GetLocale() ~= "zhCN" then return end
 
@@ -206,8 +206,10 @@ DBM_CORE_RANGERADAR_HEADER			= "距离%d码 玩家%d人"
 DBM_CORE_RANGERADAR_IN_RANGE_TEXT	= "%d人在监视距离内（%d码）"
 DBM_CORE_RANGERADAR_IN_RANGE_TEXTONE= "%s (%0.1f码)"--One target
 
-
 DBM_CORE_INFOFRAME_SHOW_SELF		= "总是显示你的能量"		-- Always show your own power value even if you are below the threshold
+DBM_CORE_INFOFRAME_SETLINES			= "设置最大行数"
+DBM_CORE_INFOFRAME_LINESDEFAULT		= "由模组设置"
+DBM_CORE_INFOFRAME_LINES_TO			= "%d行"
 
 DBM_LFG_INVITE						= "随机副本确认"
 
@@ -471,7 +473,7 @@ DBM_ARROW_ERROR_USAGE	= {
 DBM_SPEED_KILL_TIMER_TEXT	= "击杀记录"
 DBM_SPEED_CLEAR_TIMER_TEXT	= "最速清除"
 DBM_COMBAT_RES_TIMER_TEXT	= "下一次可用战复"
-DBM_CORE_TIMER_RESPAWN		= "Boss刷新"
+DBM_CORE_TIMER_RESPAWN		= "%s 刷新"
 
 DBM_REQ_INSTANCE_ID_PERMISSION		= "%s请求获取你现在副本的存档ID与进度。是否愿意向&s提交进度？\n\n注意：在接受后，他可以随时查看您当前的进度情况，直到您下线、掉线或重载用户界面。"
 DBM_ERROR_NO_RAID					= "使用该功能需要身处一个团队中。"

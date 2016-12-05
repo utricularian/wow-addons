@@ -1143,3 +1143,36 @@ Change Log:
 4.40.2
 * Added Legion spells for The Broken Isles (world)
 * Added Legion spells for The Emerald Nightmare
+
+4.40.3
+* Fixed Legion spells for Halls of Valor
+* Added Legion spells for The Emerald Nightmare
+
+4.41
+* Fixed an issue with Warrior and Death Knight tanks not being properly detected
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for The Emerald Nightmare
+
+4.41.1
+* Fixed PvP spells for warlocks
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for The Arcway
+* Added Legion spells for Court of Stars
+
+4.41.2
+* Updated for patch 7.1
+
+4.41.3
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for Trial of Valor
+
+4.41.4
+* Fixed Wrath spells for Halls of Valor
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for Trial of Valor
+* Added Legion spells for Return to Karazhan
+
+4.41.5
+* Added Legion spells for The Broken Isles (world)
+* Added Legion spells for Black Rook Hold
+

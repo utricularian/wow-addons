@@ -1258,7 +1258,7 @@ function PawnUI_CompareItems()
 			PawnUI_AddComparisonHeaderLine(LastFoundHeader)
 			LastFoundHeader = nil
 		end
-		PawnUI_AddComparisonStatLineNumbers(PawnLocal.UI.CompareColoredSockets, HasSockets1, HasSockets2)
+		PawnUI_AddComparisonStatLineNumbers(PawnLocal.UI.CompareColoredSockets, HasSockets1, HasSockets2, false) -- hide differential
 	end
 
 	local _, TotalSocketValue1 = PawnGetItemValue(ItemStats1, Item1.Level, ItemSocketBonusStats1, PawnUICurrentScale, false, true)
@@ -1270,7 +1270,7 @@ function PawnUI_CompareItems()
 			PawnUI_AddComparisonHeaderLine(LastFoundHeader)
 			LastFoundHeader = nil
 		end
-		PawnUI_AddComparisonStatLineNumbers(PawnLocal.UI.CompareGemTotalValue, TotalSocketValue1, TotalSocketValue2)
+		PawnUI_AddComparisonStatLineNumbers(PawnLocal.UI.CompareGemTotalValue, TotalSocketValue1, TotalSocketValue2, false) -- hide differential
 	end
 
 	-- Everything else below this point goes under an "Other" header.
@@ -1287,7 +1287,7 @@ function PawnUI_CompareItems()
 			PawnUI_AddComparisonHeaderLine(LastFoundHeader)
 			LastFoundHeader = nil
 		end
-		PawnUI_AddComparisonStatLineNumbers(PawnLocal.ItemLevelTooltipLine, Level1, Level2)
+		PawnUI_AddComparisonStatLineNumbers(PawnLocal.ItemLevelTooltipLine, Level1, Level2, false) -- hide differential
 	end
 	
 	-- Add asterisk indicator.
@@ -1388,16 +1388,20 @@ end
 
 -- Adds a stat line to the comparison stat area, passing in the numbers to use.  It is acceptable to use nil for either or both
 -- of the numbers.  Differences are calculated automatically.
-function PawnUI_AddComparisonStatLineNumbers(StatNameAndValue, Quantity1, Quantity2)
+function PawnUI_AddComparisonStatLineNumbers(StatNameAndValue, Quantity1, Quantity2, ShowDifference)
+	if ShowDifference == nil then ShowDifference = true end -- default value
+
 	local QuantityString1 = VgerCore.FormatCompactDecimal(Quantity1)
 	local QuantityString2 = VgerCore.FormatCompactDecimal(Quantity2)
 	local Difference1, Difference2
 	if not Quantity1 then Quantity1 = 0 end
 	if not Quantity2 then Quantity2 = 0 end
-	if Quantity1 > Quantity2 then
-		Difference1 = "(+" .. VgerCore.FormatCompactDecimal(Quantity1 - Quantity2) .. ")"
-	elseif Quantity2 > Quantity1 then
-		Difference2 = "(+" .. VgerCore.FormatCompactDecimal(Quantity2 - Quantity1) .. ")"
+	if ShowDifference then
+		if Quantity1 > Quantity2 then
+			Difference1 = "(+" .. VgerCore.FormatCompactDecimal(Quantity1 - Quantity2) .. ")"
+		elseif Quantity2 > Quantity1 then
+			Difference2 = "(+" .. VgerCore.FormatCompactDecimal(Quantity2 - Quantity1) .. ")"
+		end
 	end
 	
 	PawnUI_AddComparisonStatLineStrings(StatNameAndValue, QuantityString1, QuantityString2, Difference1, Difference2)
@@ -1724,11 +1728,15 @@ function PawnUIOptionsTabPage_OnShow()
 	PawnUIFrame_EnchantedValuesCheck:SetChecked(PawnCommon.ShowEnchanted)
 	
 	-- Advisor options
+	if PawnOriginalIsContainerItemAnUpgrade == nil then
+		-- On WoW 7.0, hide the bag upgrade advisor checkbox since that feature doesn't work yet.
+		PawnUIFrame_ShowBagUpgradeAdvisorCheck:Disable()
+	end 
+	PawnUIFrame_ShowBagUpgradeAdvisorCheck:SetChecked(PawnCommon.ShowBagUpgradeAdvisor)
 	PawnUIFrame_ShowLootUpgradeAdvisorCheck:SetChecked(PawnCommon.ShowLootUpgradeAdvisor)
 	PawnUIFrame_ShowQuestUpgradeAdvisorCheck:SetChecked(PawnCommon.ShowQuestUpgradeAdvisor)
 	PawnUIFrame_ShowSocketingAdvisorCheck:SetChecked(PawnCommon.ShowSocketingAdvisor)
 	PawnUIFrame_IgnoreGemsWhileLevelingCheck:SetChecked(PawnCommon.IgnoreGemsWhileLeveling)
-	PawnUIFrame_IgnoreItemUpgradesCheck:SetChecked(PawnCommon.IgnoreItemUpgrades)
 
 	-- Other options
 	PawnUIFrame_DebugCheck:SetChecked(PawnCommon.Debug)
@@ -1794,6 +1802,17 @@ function PawnUIFrame_EnchantedValuesCheck_OnClick()
 	PawnResetTooltips()
 end
 
+function PawnUIFrame_ShowBagUpgradeAdvisorCheck_OnClick()
+	PawnCommon.ShowBagUpgradeAdvisor = PawnUIFrame_ShowBagUpgradeAdvisorCheck:GetChecked()
+
+	-- When toggling this option, refresh all bags.
+	local BagIndex
+	for BagIndex = 1, NUM_CONTAINER_FRAMES, 1 do
+		local BagFrame = _G["ContainerFrame" .. BagIndex];
+		if BagFrame:IsShown() then ContainerFrame_UpdateItemUpgradeIcons(BagFrame) end
+	end
+end
+
 function PawnUIFrame_ShowLootUpgradeAdvisorCheck_OnClick()
 	PawnCommon.ShowLootUpgradeAdvisor = PawnUIFrame_ShowLootUpgradeAdvisorCheck:GetChecked()
 	if LootHistoryFrame then LootHistoryFrame_FullUpdate(LootHistoryFrame) end
@@ -1809,13 +1828,6 @@ end
 
 function PawnUIFrame_IgnoreGemsWhileLevelingCheck_OnClick()
 	PawnCommon.IgnoreGemsWhileLeveling = PawnUIFrame_IgnoreGemsWhileLevelingCheck:GetChecked()
-	PawnClearCache()
-	PawnInvalidateBestItems()
-	PawnResetTooltips()
-end
-
-function PawnUIFrame_IgnoreItemUpgradesCheck_OnClick()
-	PawnCommon.IgnoreItemUpgrades = PawnUIFrame_IgnoreItemUpgradesCheck:GetChecked()
 	PawnClearCache()
 	PawnInvalidateBestItems()
 	PawnResetTooltips()

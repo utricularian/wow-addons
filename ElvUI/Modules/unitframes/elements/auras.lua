@@ -26,7 +26,7 @@ function UF:Construct_Buffs(frame)
 	buffs.PostCreateIcon = self.Construct_AuraIcon
 	buffs.PostUpdateIcon = self.PostUpdateAura
 	buffs.CustomFilter = self.AuraFilter
-	buffs:SetFrameLevel(10)
+	buffs:SetFrameLevel(frame.RaisedElementParent:GetFrameLevel() + 10) --Make them appear above any text element
 	buffs.type = 'buffs'
 	--Set initial width to prevent division by zero. This value doesn't matter, as it will be updated later
 	buffs:Width(100)
@@ -42,7 +42,7 @@ function UF:Construct_Debuffs(frame)
 	debuffs.PostUpdateIcon = self.PostUpdateAura
 	debuffs.CustomFilter = self.AuraFilter
 	debuffs.type = 'debuffs'
-	debuffs:SetFrameLevel(10)
+	debuffs:SetFrameLevel(frame.RaisedElementParent:GetFrameLevel() + 10) --Make them appear above any text element
 	--Set initial width to prevent division by zero. This value doesn't matter, as it will be updated later
 	debuffs:Width(100)
 
@@ -350,7 +350,7 @@ function UF:UpdateAuraIconSettings(auras, noCycle)
 	end
 end
 
-function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)
+function UF:PostUpdateAura(unit, button, index)
 	local name, _, _, _, dtype, duration, expiration, _, isStealable = UnitAura(unit, index, button.filter)
 	local isFriend = UnitIsFriend('player', unit)
 	
@@ -467,7 +467,6 @@ function UF:CheckFilter(filterType, isFriend)
 end
 
 function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, timeLeft, unitCaster, isStealable, _, spellID, canApplyAura, isBossAura)
-	local isPlayer, isFriend
 	local db = self:GetParent().db
 	if not db or not db[self.type] then return true; end
 
@@ -479,7 +478,6 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 	local playerOnlyFilter = false
 	local isPlayer = unitCaster == 'player' or unitCaster == 'vehicle'
 	local isFriend = UnitIsFriend('player', unit)
-	local auraType = isFriend and db.friendlyAuraType or db.enemyAuraType
 
 	icon.isPlayer = isPlayer
 	icon.owner = unitCaster

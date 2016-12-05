@@ -1,0 +1,23 @@
+## Interface: 70100
+## Title: Telemancy
+## Notes: Display Suramar telemancy portal network on the world map.
+## Author: Kruithne
+## Version: 1.1.4
+
+## X-Curse-Project-ID: telemancy
+## X-GitHub-Repo: Kruithne/Telemancy
+## X-Localization: enUS, frFR, esES, deDE, ruRU, zhCN, koKR, zhTW
+## X-Contributors: q3fuba, Gnarfoz, vlakarados, fyhcslb, Urkaz, 이중호, Tartifion, mrozekma, EKE00372, zp, Bloerwald
+## X-License: All Rights Reserved. Modifications welcome on GitHub: https://github.com/Kruithne/Telemancy
+
+Krutilities.lua
+Telemancy.lua
+
+localization/lang_default.lua
+localization/lang_frFR.lua
+localization/lang_esES.lua
+localization/lang_deDE.lua
+localization/lang_ruRU.lua
+localization/lang_zhCN.lua
+localization/lang_koKR.lua
+localization/lang_zhTW.lua

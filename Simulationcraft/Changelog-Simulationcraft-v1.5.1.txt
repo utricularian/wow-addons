@@ -1,0 +1,13 @@
+tag v1.5.1
+a665ed8e32b7901aa35dc8f6064526a1710846f2
+Navv <navv1234@gmail.com>
+2016-09-03 23:16:01 +0300
+
+Release for v1.5.1
+
+
+--------------------
+
+Navv:
+	- Remove fancy Artifact shenanigans, just open the UI and parse.
+	- Remove LibArtifactData dependency.

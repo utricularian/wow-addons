@@ -53,4 +53,9 @@ GTFO.IgnoreScan["1604"] = true; -- Dazed
 GTFO.IgnoreScan["187464"] = true; -- Shadow Mend
 GTFO.IgnoreScan["186439"] = true; -- Shadow Mend
 GTFO.IgnoreScan["210279"] = true; -- Creeping Nightmares
+GTFO.IgnoreScan["203121"] = true; -- Mark of Taerer
+GTFO.IgnoreScan["203125"] = true; -- Mark of Emeriss
+GTFO.IgnoreScan["203102"] = true; -- Mark of Ysondre
+GTFO.IgnoreScan["203124"] = true; -- Mark of Lethon
+
 

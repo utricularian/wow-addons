@@ -253,6 +253,32 @@ GTFO.SpellID["169002"] = {
   tankSound = 0;
 };
 
+GTFO.SpellID["206777"] = {
+  --desc = "Nightmare Void";
+  applicationOnly = true;
+  sound = 1;
+};
+
+GTFO.SpellID["209008"] = {
+  --desc = "Fel Firestorm (Destromath)";
+  sound = 1;
+};
+
+GTFO.SpellID["199568"] = {
+  --desc = "Grasping Spirits";
+  sound = 1;
+};
+
+GTFO.SpellID["201832"] = {
+  --desc = "Fel Immolation (Ariden)";
+  sound = 1;
+};
+
+GTFO.SpellID["215876"] = {
+  --desc = "Burning Earth (Shar'thos)";
+  sound = 1;
+};
+
 -- **********
 -- * Mardum *
 -- **********
@@ -408,7 +434,7 @@ GTFO.SpellID["191858"] = {
 GTFO.SpellID["193055"] = {
   --desc = "Call the Seas (Call the Seas)";
   sound = 1;
-  negatingBuffSpellID = 193018; -- Gaseous Bubbles
+  negatingDebuffSpellID = 193018; -- Gaseous Bubbles
 };
 
 -- *********************
@@ -511,7 +537,7 @@ GTFO.SpellID["199818"] = {
 GTFO.SpellID["200682"] = {
   --desc = "Eye of the Storm (Solsten)";
   sound = 1;
-  negatingBuffSpellID = 203963; -- Eye of the Storm
+  negatingDebuffSpellID = 203963; -- Eye of the Storm
 };
 
 GTFO.SpellID["193702"] = {
@@ -561,19 +587,60 @@ GTFO.SpellID["202266"] = {
 -- * The Arcway *
 -- **************
 
--- TODO: Arcane Pool (Ivanyr) - pool created by nether link
--- TODO: Charged Bolt (Ivanyr) Heroic only
 -- TODO: Suppression Protocol (Corstilax)
--- TODO: Destabilized Orb (Corstilax) - Heroic only
--- TODO: Wake of Shadows (General Xakal)
--- TODO: Blink Strikes (Nal'tira) - For other players, not main target
 -- TODO: Force Nova (Advisor Vandros)
 -- TODO: Unstable Mana (Advisor Vandros) - FF when not the target
+
+GTFO.SpellID["194006"] = {
+  --desc = "Ooze Puddle (Unstable Amalgamation)";
+  sound = 1;
+};
 
 GTFO.SpellID["200040"] = {
   --desc = "Nether Venom (Nal'tira)";
   sound = 1;
 };
+
+GTFO.SpellID["199812"] = {
+  --desc = "Blink Strikes (Nal'tira)";
+  sound = 1;
+};
+
+GTFO.SpellID["210750"] = {
+  --desc = "Collapsing Rift (Withered Manawraith)";
+  sound = 1;
+};
+
+GTFO.SpellID["220500"] = {
+  --desc = "Destabilized Orb (Corstilax)";
+  sound = 1;
+};
+
+GTFO.SpellID["211209"] = {
+  --desc = "Arcane Slicer (Arcane Anomaly)";
+  sound = 1;
+};
+
+GTFO.SpellID["196824"] = {
+  --desc = "Nether Link (Ivanyr)";
+  sound = 1;
+};
+
+GTFO.SpellID["220597"] = {
+  --desc = "Charged Bolt (Ivanyr)";
+  sound = 1;
+};
+
+GTFO.SpellID["211745"] = {
+  --desc = "Fel Strike (Wrathguard Felblade)";
+  sound = 1;
+};
+
+GTFO.SpellID["220443"] = {
+  --desc = "Wake of Shadows (General Xakal)";
+  sound = 1;
+};
+
 
 -- ****************
 -- * Maw of Souls *
@@ -608,8 +675,41 @@ GTFO.SpellID["227234"] = {
 -- * Court of Stars *
 -- ******************
 
--- TODO: Arcane Lockdown (Patrol Captain Gerdo) - Sound when not jumping and reducing stacks
--- TODO: Disintegration Beam (Talixae Flamewreath) - Avoidable?
+GTFO.SpellID["207278"] = {
+	--desc = "Arcane Lockdown (Patrol Captain Gerdo)";
+	test = true;
+	alwaysAlert = true;
+	soundFunction = function() 
+		-- Alert if hit more than 3 times
+		if (not GTFO.VariableStore.ArcaneLockdownHitCount) then
+			GTFO.VariableStore.ArcaneLockdownHitCount = 0;
+			GTFO.VariableStore.ArcaneLockdownStackCount = 0;
+		end
+		GTFO_AddEvent("ResetArcaneLockdownCounter", 5, function() GTFO.VariableStore.ArcaneLockdownHitCount = 0; GTFO.VariableStore.ArcaneLockdownStackCount = 0; end);
+		GTFO.VariableStore.ArcaneLockdownHitCount = GTFO.VariableStore.ArcaneLockdownHitCount + 1;
+		local stackCount = GTFO_DebuffStackCount("player", 207278);
+		if (GTFO.VariableStore.ArcaneLockdownStackCount == stackCount) then
+			if (GTFO.VariableStore.ArcaneLockdownHitCount > 2) then
+				return 1;
+			end			
+		else
+			GTFO.VariableStore.ArcaneLockdownStackCount = stackCount;
+			if (stackCount < 3) then			
+				GTFO.VariableStore.ArcaneLockdownHitCount = 1;
+			end
+		end
+	end;
+};
+
+GTFO.SpellID["209027"] = {
+  --desc = "Disrupting Energy (Guardian Construct)";
+  sound = 1;
+};
+
+GTFO.SpellID["211391"] = {
+  --desc = "Felblaze Puddle (Legion Hound)";
+  sound = 1;
+};
 
 -- ************************
 -- * Vault of the Wardens *
@@ -697,6 +797,11 @@ GTFO.SpellID["221680"] = {
   sound = 1;
 };
 
+GTFO.SpellID["221866"] = {
+  --desc = "Blade Barrage (Kelorn Nightblade)";
+  sound = 1;
+  tankSound = 0;
+};
 
 -- *************************
 -- * The Emerald Nightmare *
@@ -749,10 +854,10 @@ GTFO.SpellID["202978"] = {
   sound = 1;
 };
 
-GTFO.FFSpellID["203097"] = {
+GTFO.SpellID["203097"] = {
   --desc = "Rot (Nythendra)";
   sound = 4;
-  negatingBuffSpellID = 203096; -- Rot
+  negatingDebuffSpellID = 203096; -- Rot
 };
 
 GTFO.SpellID["223946"] = {
@@ -773,6 +878,11 @@ GTFO.SpellID["212238"] = {
 GTFO.SpellID["223596"] = {
   --desc = "Darkfall (Dreadsoul Corruptor)";
   sound = 1;
+};
+
+GTFO.SpellID["203788"] = {
+  --desc = "Volatile Infection (Emeriss)";
+  sound = 4;
 };
 
 GTFO.SpellID["211196"] = {
@@ -830,7 +940,7 @@ GTFO.SpellID["219950"] = {
 GTFO.SpellID["213624"] = {
   --desc = "Mark of Frost (Spellblade Aluriel)";
   sound = 4;
-  negatingBuffSpellID = 212587; -- Mark of Frost
+  negatingDebuffSpellID = 212587; -- Mark of Frost
 };
 
 GTFO.SpellID["213520"] = {
@@ -857,6 +967,144 @@ GTFO.SpellID["209433"] = {
 
 GTFO.SpellID["209433"] = {
   --desc = "Spanning Singularity (Grand Magistrix Elisande)";
+  sound = 1;
+};
+
+--- ******************
+--- * Trial of Valor *
+--- ******************
+
+GTFO.SpellID["228007"] = {
+  --desc = "Dancing Blade (Odyn)";
+  sound = 1;
+};
+
+GTFO.SpellID["228683"] = {
+  --desc = "Cleansing Flame (Odyn)";
+  sound = 1;
+};
+
+GTFO.SpellID["227998"] = {
+  --desc = "Bilewater Corrosion (Helya)";
+  sound = 1;
+};
+
+GTFO.SpellID["228127"] = {
+  --desc = "Decay (Helya)";
+  sound = 1;
+};
+
+GTFO.SpellID["227930"] = {
+  --desc = "Orb of Corruption (Helya)";
+  sound = 1;
+};
+
+GTFO.SpellID["228063"] = {
+  --desc = "Orb of Corrosion (Helya)";
+  sound = 1;
+};
+
+GTFO.SpellID["228371"] = {
+  --desc = "Breath of Dread (Helhound)";
+  sound = 1;
+};
+
+GTFO.SpellID["230197"] = {
+  --desc = "Dark Waters (Helya)";
+  sound = 1;
+};
+
+
+--- **********************
+--- * Return to Karazhan *
+--- **********************
+
+-- TODO: Flame Gale (Toe Knee)
+-- TODO: Flashing Forks (Coggleston)
+-- TODO: Iron Whirlwind (Baron Rafe Dreuger) -- tank avoidable?
+
+
+GTFO.SpellID["228200"] = {
+  --desc = "Burning Blaze (Luminore)";
+  sound = 1;
+  test = true; -- Not when drenched?
+};
+
+GTFO.SpellID["227465"] = {
+  --desc = "Power Discharge (Curator)";
+  sound = 1;
+};
+
+GTFO.SpellID["228808"] = {
+  --desc = "Charred Earth (Nightbane)";
+  sound = 1;
+  negatingDebuffSpellID = 228796; -- Ignite Soul
+};
+
+GTFO.SpellID["228001"] = {
+  --desc = "Pennies From Heaven (Ghostly Philanthropist)";
+  sound = 1;
+};
+
+GTFO.SpellID["227848"] = {
+  --desc = "Sacred Ground (Maiden of Virtue)";
+  applicationOnly = true;
+	minimumStacks = 1;
+  sound = 1;
+};
+
+GTFO.SpellID["227473"] = {
+  --desc = "Whirling Edge (Lord Robin Daris)";
+  sound = 1;
+};
+
+GTFO.SpellID["229682"] = {
+  --desc = "Gleeful Immolation (Gleeful Immoliator)";
+  sound = 1;
+};
+
+GTFO.SpellID["229677"] = {
+  --desc = "Fel Bomb (Infused Pyromancer)";
+  sound = 1;
+};
+
+GTFO.SpellID["227806"] = {
+  --desc = "Ceaseless Winter (Shade of Medivh)";
+  applicationOnly = true;
+  sound = 1;
+	minimumStacks = 2;
+};
+
+GTFO.SpellID["227524"] = {
+  --desc = "Energy Void (Mana Devourer)";
+  sound = 1;
+  test = true; -- Does it work?
+  negatingDebuffSpellID = 227502; -- Unstable Mana
+};
+
+GTFO.SpellID["229905"] = {
+  --desc = "Soul Harvest (Viz'aduum the Watcher)";
+  sound = 1;
+};
+
+GTFO.SpellID["230431"] = {
+  --desc = "Seeping Fel Power (Viz'aduum the Watcher)";
+  sound = 1;
+};
+
+GTFO.SpellID["229250"] = {
+  --desc = "Fel Flames (Viz'aduum the Watcher)";
+  sound = 1;
+};
+
+GTFO.SpellID["229248"] = {
+  --desc = "Fel Beam (Viz'aduum the Watcher)";
+  damageMinimum = 1;
+  sound = 1;
+};
+
+GTFO.SpellID["228993"] = {
+  --desc = "Caustic Pool (Coldmist Stalker)";
   sound = 1;
 };
 

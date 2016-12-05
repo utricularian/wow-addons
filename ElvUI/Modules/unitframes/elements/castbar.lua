@@ -1,12 +1,10 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local UF = E:GetModule('UnitFrames');
-local LSM = LibStub("LibSharedMedia-3.0");
 
 --Cache global variables
 --Lua functions
 local unpack, tonumber = unpack, tonumber
-local floor, abs, min = math.floor, abs, math.min
-local sub, utf8sub, utf8len = string.sub, string.utf8sub, string.utf8len
+local abs, min = abs, math.min
 --WoW API / Variables
 local CreateFrame = CreateFrame
 local UnitSpellHaste = UnitSpellHaste
@@ -34,9 +32,9 @@ local INVERT_ANCHORPOINT = {
 
 local ticks = {}
 
-function UF:Construct_Castbar(frame, direction, moverName)
+function UF:Construct_Castbar(frame, moverName)
 	local castbar = CreateFrame("StatusBar", nil, frame)
-	castbar:SetFrameStrata("MEDIUM")
+	castbar:SetFrameLevel(frame.RaisedElementParent:GetFrameLevel() + 30) --Make it appear above everything else
 	self['statusbars'][castbar] = true
 	castbar.CustomDelayText = self.CustomCastDelayText
 	castbar.CustomTimeText = self.CustomTimeText
@@ -167,8 +165,6 @@ function UF:Configure_Castbar(frame)
 		if(castbar.Holder.mover) then
 			E:DisableMover(castbar.Holder.mover:GetName())
 		end
-
-		castbar:SetFrameStrata("HIGH")
 	else
 		local isMoved = E:HasMoverBeenMoved(frame:GetName()..'CastbarMover') or not castbar.Holder.mover
 		if not isMoved then
@@ -191,8 +187,6 @@ function UF:Configure_Castbar(frame)
 		if(castbar.Holder.mover) then
 			E:EnableMover(castbar.Holder.mover:GetName())
 		end
-
-		castbar:SetFrameStrata("MEDIUM")
 	end
 
 	if not db.castbar.iconAttached and db.castbar.icon then
@@ -200,7 +194,6 @@ function UF:Configure_Castbar(frame)
 		local anchorPoint = db.castbar.iconPosition
 		castbar.Icon.bg:ClearAllPoints()
 		castbar.Icon.bg:Point(INVERT_ANCHORPOINT[anchorPoint], attachPoint, anchorPoint, db.castbar.iconXOffset, db.castbar.iconYOffset)
-		castbar.Icon.bg:SetFrameStrata("MEDIUM")
 	elseif(db.castbar.icon) then
 		castbar.Icon.bg:ClearAllPoints()
 		if frame.ORIENTATION == "RIGHT" then
@@ -208,7 +201,6 @@ function UF:Configure_Castbar(frame)
 		else
 			castbar.Icon.bg:Point("RIGHT", castbar, "LEFT", -frame.SPACING*3, 0)
 		end
-		castbar.Icon.bg:SetFrameStrata(castbar:GetFrameStrata())
 	end
 
 	--Adjust tick heights
@@ -314,7 +306,7 @@ end
 local MageSpellName = GetSpellInfo(5143) --Arcane Missiles
 local MageBuffName = GetSpellInfo(166872) --4p T17 bonus proc for arcane
 
-function UF:PostCastStart(unit, name, rank, castid)
+function UF:PostCastStart(unit, name)
 	local db = self:GetParent().db
 	if not db or not db.castbar then return; end
 
@@ -430,7 +422,7 @@ function UF:PostCastStart(unit, name, rank, castid)
 	end
 end
 
-function UF:PostCastStop(unit, name, castid)
+function UF:PostCastStop()
 	self.chainChannel = nil
 	self.prevSpellCast = nil
 end
@@ -531,7 +523,7 @@ function UF:PostCastInterruptible(unit)
 	end
 end
 
-function UF:PostCastNotInterruptible(unit)
+function UF:PostCastNotInterruptible()
 	local colors = ElvUF.colors
 	self:SetStatusBarColor(colors.castNoInterrupt[1], colors.castNoInterrupt[2], colors.castNoInterrupt[3])
 end

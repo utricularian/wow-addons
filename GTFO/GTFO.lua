@@ -23,8 +23,8 @@ GTFO = {
 		TrivialDamagePercent = 2; -- Minimum % of HP lost required for an alert to be trivial
 		SoundOverrides = { }; -- Override table for GTFO sounds
 	};
-	Version = "4.40.2"; -- Version number (text format)
-	VersionNumber = 44002; -- Numeric version number for checking out-of-date clients
+	Version = "4.41.5"; -- Version number (text format)
+	VersionNumber = 44105; -- Numeric version number for checking out-of-date clients
 	DataLogging = nil; -- Indicate whether or not the addon needs to run the datalogging function (for hooking)
 	DataCode = "4"; -- Saved Variable versioning, change this value to force a reset to default
 	CanTank = nil; -- The active character is capable of tanking
@@ -1371,53 +1371,21 @@ end
 function GTFO_CheckTankMode()
 	if (GTFO.CanTank) then
 		local x, class = UnitClass("player");
-		if (class == "PALADIN") then
-			-- While it's more obvious to check for Righteous Fury, that ended up being more CPU intensive than desired
-			-- Checking for the shield is good enough.
-			if (GetInventoryItemID("PLAYER",17)) then
-				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(GetInventoryItemID("PLAYER",17));
-				local itemStats = {};
-				if (not itemLink) then
-						--GTFO_DebugPrint("Item found, but unable to scan it - Tank mode off for now");
-						return nil;						
-				end
-				itemStats = GetItemStats(itemLink, itemStats);
-				for statType, statValue in pairs(itemStats) do
-					if (statType == "ITEM_MOD_INTELLECT_SHORT" or statType == "ITEM_MOD_SPIRIT_SHORT") then
-						--GTFO_DebugPrint("Healing Shield found - Tank mode off");
-						return nil;
-					end
-				end
-				--GTFO_DebugPrint("Tanking Shield found - tank mode activated");
+		if (class == "DRUID") then
+			local stance = GetShapeshiftForm();
+			if (stance == 1) then
+				--GTFO_DebugPrint("Bear Form found - tank mode activated");
+				return true;
+			end
+		elseif (class == "MONK" or class == "DEMONHUNTER" or class == "WARRIOR" or class == "DEATHKNIGHT" or class == "PALADIN") then
+			local spec = GetSpecialization();
+			if (spec and GetSpecializationRole(spec) == "TANK") then
+				--GTFO_DebugPrint("Tank spec found - tank mode activated");
 				return true;
 			end
 		else
-			local stance = GetShapeshiftForm();
-			if (class == "DRUID") then
-				if (stance == 1) then
-					--GTFO_DebugPrint("Bear Form found - tank mode activated");
-					return true;
-				end
-			elseif (class == "DEATHKNIGHT") then
-				if (stance == 1) then
-					--GTFO_DebugPrint("Blood Presence found - tank mode activated");
-					return true;
-				end
-			elseif (class == "WARRIOR") then
-				if (stance == 2) then
-					--GTFO_DebugPrint("Defensive stance found - tank mode activated");
-					return true;
-				end
-			elseif (class == "MONK" or class == "DEMONHUNTER") then
-				local spec = GetSpecialization();
-				if (spec and GetSpecializationRole(spec) == "TANK") then
-					--GTFO_DebugPrint("Tank spec found - tank mode activated");
-					return true;
-				end
-			else
-				--GTFO_DebugPrint("Failed Tank Mode - This code shouldn't have ran");
-				GTFO.CanTank = nil;
-			end
+			--GTFO_DebugPrint("Failed Tank Mode - This code shouldn't have ran");
+			GTFO.CanTank = nil;
 		end
 	end
 	--GTFO_DebugPrint("Tank mode off");

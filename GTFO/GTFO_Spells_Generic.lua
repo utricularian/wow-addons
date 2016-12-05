@@ -116,12 +116,14 @@ GTFO.SpellID["5740"] = {
 	--desc = "Rain of Fire (PvP)";
 	trivialPercent = 0;
 	sound = 2;
+	ignoreSelfInflicted = true;
 };
 
 GTFO.SpellID["42223"] = {
 	--desc = "Rain of Fire (PvP)";
 	trivialPercent = 0;
 	sound = 2;
+	ignoreSelfInflicted = true;
 };
 
 GTFO.SpellID["5857"] = {

@@ -523,9 +523,9 @@ function WeakAuras.ConstructFunction(prototype, trigger)
               local any = false;
               for value, _ in pairs(trigger[name].multi) do
                 if not arg.test then
-                  test = test..name.."=="..(tonumber(value) or "\""..value.."\"").." or ";
+                  test = test..name.."=="..(tonumber(value) or "[["..value.."]]").." or ";
                 else
-                  test = test..arg.test:format(tonumber(value) or "\""..value.."\"").." or ";
+                  test = test..arg.test:format(tonumber(value) or "[["..value.."]]").." or ";
                 end
                 any = true;
               end
@@ -538,9 +538,9 @@ function WeakAuras.ConstructFunction(prototype, trigger)
             elseif(trigger["use_"..name]) then -- single selection
               local value = trigger[name].single;
               if not arg.test then
-                test = trigger[name].single and "("..name.."=="..(tonumber(value) or "\""..value.."\"")..")";
+                test = trigger[name].single and "("..name.."=="..(tonumber(value) or "[["..value.."]]")..")";
               else
-                test = trigger[name].single and "("..arg.test:format(tonumber(value) or "\""..value.."\"")..")";
+                test = trigger[name].single and "("..arg.test:format(tonumber(value) or "[["..value.."]]")..")";
               end
             end
           elseif(arg.type == "toggle") then
@@ -555,7 +555,7 @@ function WeakAuras.ConstructFunction(prototype, trigger)
             test = "("..arg.test:format(trigger[name])..")";
           elseif(arg.type == "longstring" and trigger[name.."_operator"]) then
             if(trigger[name.."_operator"] == "==") then
-              test = "("..name.."==\""..trigger[name].."\")";
+              test = "("..name.."==[["..trigger[name].."]])";
             else
               test = "("..name..":"..trigger[name.."_operator"]:format(trigger[name])..")";
             end
@@ -563,7 +563,7 @@ function WeakAuras.ConstructFunction(prototype, trigger)
             if(type(trigger[name]) == "table") then
               trigger[name] = "error";
             end
-            test = "("..name..(trigger[name.."_operator"] or "==")..(number or "\""..(trigger[name] or "").."\"")..")";
+            test = "("..name..(trigger[name.."_operator"] or "==")..(number or "[["..(trigger[name] or "").."]]")..")";
           end
           if(arg.required) then
             tinsert(required, test);
@@ -1664,8 +1664,23 @@ function WeakAuras.Modernize(data)
     end
   end
 
+  if data.regionType == "model" then
+    if (data.api == nil) then
+      data.api = false;
+    end
+  end
+
   if (not data.activeTriggerMode) then
     data.activeTriggerMode = 0;
+  end
+
+  if (data.sort == "hybrid") then
+    if (not data.hybridPosition) then
+      data.hybridPosition = "hybridLast";
+    end
+    if (not data.hybridSortMode) then
+      data.hybridSortMode = "descending";
+    end
   end
 end
 
@@ -2095,9 +2110,12 @@ function WeakAuras.SetAllStatesHiddenExcept(id, triggernum, list)
 end
 
 function WeakAuras.ReleaseClone(id, cloneId, regionType)
+   if (not clones[id]) then
+     return;
+   end
    local region = clones[id][cloneId];
    clones[id][cloneId] = nil;
-   clonePool[regionType][#clonePool[regionType]] = region;
+   clonePool[regionType][#clonePool[regionType] + 1] = region;
 end
 
 -- This function is currently never called if WeakAuras is paused, but it is set up so that it can take a different action
@@ -2127,42 +2145,49 @@ function WeakAuras.PerformActions(data, type, region)
   end
 
   if(actions.do_message and actions.message_type and actions.message and not squelch_actions) then
+    local message = actions.message;
+    if (message:find('%%')) then
+      for k, v in pairs(region.values) do
+        print(k, v);
+      end
+      message = WeakAuras.ReplacePlaceHolders(message, region.values, region.state);
+    end
     if(actions.message_type == "PRINT") then
-      DEFAULT_CHAT_FRAME:AddMessage(actions.message, actions.r or 1, actions.g or 1, actions.b or 1);
+      DEFAULT_CHAT_FRAME:AddMessage(message, actions.r or 1, actions.g or 1, actions.b or 1);
     elseif(actions.message_type == "COMBAT") then
     if(CombatText_AddMessage) then
-      CombatText_AddMessage(actions.message, COMBAT_TEXT_SCROLL_FUNCTION, actions.r or 1, actions.g or 1, actions.b or 1);
+      CombatText_AddMessage(message, COMBAT_TEXT_SCROLL_FUNCTION, actions.r or 1, actions.g or 1, actions.b or 1);
     end
     elseif(actions.message_type == "WHISPER") then
     if(actions.message_dest) then
       if(actions.message_dest == "target" or actions.message_dest == "'target'" or actions.message_dest == "\"target\"" or actions.message_dest == "%t" or actions.message_dest == "'%t'" or actions.message_dest == "\"%t\"") then
-      WeakAuras.Announce(actions.message, "WHISPER", nil, UnitName("target"), data.id, type);
+      WeakAuras.Announce(message, "WHISPER", nil, UnitName("target"), data.id, type);
       else
-      WeakAuras.Announce(actions.message, "WHISPER", nil, actions.message_dest, data.id, type);
+      WeakAuras.Announce(message, "WHISPER", nil, actions.message_dest, data.id, type);
       end
     end
     elseif(actions.message_type == "CHANNEL") then
     local channel = actions.message_channel and tonumber(actions.message_channel);
     if(GetChannelName(channel)) then
-      WeakAuras.Announce(actions.message, "CHANNEL", nil, channel, data.id, type);
+      WeakAuras.Announce(message, "CHANNEL", nil, channel, data.id, type);
     end
     elseif(actions.message_type == "SMARTRAID") then
       local isInstanceGroup = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
       if UnitInBattleground("player") then
-        SendChatMessage(actions.message, "INSTANCE_CHAT")
+        SendChatMessage(message, "INSTANCE_CHAT")
       elseif UnitInRaid("player") then
-        SendChatMessage(actions.message, "RAID")
+        SendChatMessage(message, "RAID")
       elseif UnitInParty("player") then
         if isInstanceGroup then
-          SendChatMessage(actions.message, "INSTANCE_CHAT")
+          SendChatMessage(message, "INSTANCE_CHAT")
         else
-          SendChatMessage(actions.message, "PARTY")
+          SendChatMessage(message, "PARTY")
         end
       else
-        SendChatMessage(actions.message, "SAY")
+        SendChatMessage(message, "SAY")
       end
     else
-    WeakAuras.Announce(actions.message, actions.message_type, nil, nil, data.id, type);
+    WeakAuras.Announce(message, actions.message_type, nil, nil, data.id, type);
     end
   end
 
@@ -3141,7 +3166,7 @@ local function startStopTimers(id, cloneId, triggernum, state)
               WeakAuras.UpdatedTriggerState(id);
             end
           end,
-          state.expirationTime - GetTime() + 0.01);
+          state.expirationTime - GetTime());
         record.expirationTime = state.expirationTime;
       end
     else -- no auto hide, delete timer

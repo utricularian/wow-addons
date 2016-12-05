@@ -114,7 +114,7 @@ local function modify(parent, region, data)
         elseif(data.align == "RIGHT") then
             selfPoint = "RIGHT";
         end
-    elseif(data.grow == "CIRCLE") then
+    elseif(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
         selfPoint = "CENTER";
     end
     data.selfPoint = selfPoint;
@@ -168,72 +168,92 @@ local function modify(parent, region, data)
             regionIndex = regionIndex + 1;
         end
 
+        local function expirationTime(region)
+          if (region.region and region.region.state) then
+             local expires = region.region.state.expirationTime;
+             if (expires and expires > 0 and expires > GetTime()) then
+               return expires;
+             end
+          end
+          return nil;
+        end
+
+        local function compareExpirationTimes(regionA, regionB)
+          local aExpires = expirationTime(regionA);
+          local bExpires = expirationTime(regionB);
+
+
+          if (aExpires and bExpires) then
+            if (aExpires == bExpires) then
+              return nil;
+            end
+            return aExpires < bExpires;
+          end
+
+          if (aExpires) then
+            return false;
+          end
+
+          if (bExpires) then
+            return true;
+          end
+
+          return nil;
+        end
+
         if(data.sort == "ascending") then
           table.sort(region.controlledRegions, function(a, b)
-            return (
-                a.region
-                    and a.region.state
-                    and a.region.state.expirationTime
-                    and a.region.state.expirationTime > 0
-                    and a.region.state.expirationTime
-                or math.huge
-            ) < (
-                b.region
-                    and b.region.state
-                    and b.region.state.expirationTime
-                    and b.region.state.expirationTime > 0
-                    and b.region.state.expirationTime
-                or math.huge
-              )
-            end);
+            local result = compareExpirationTimes(a, b);
+            if (result == nil) then
+              return a.dataIndex < b.dataIndex;
+            end
+            return result;
+        end);
         elseif(data.sort == "descending") then
-            table.sort(region.controlledRegions, function(a, b)
-                return (
-                    a.region
-                    and a.region.state
-                    and a.region.state.expirationTime
-                    and a.region.state.expirationTime > 0
-                    and a.region.state.expirationTime
-                    or math.huge
-                ) > (
-                    b.region
-                    and b.region.state
-                    and b.region.state.expirationTime
-                    and b.region.state.expirationTime > 0
-                    and b.region.state.expirationTime
-                    or math.huge
-                )
-            end);
+          table.sort(region.controlledRegions, function(a, b)
+            local result = compareExpirationTimes(a, b);
+            if (result == nil) then
+              return a.dataIndex < b.dataIndex;
+            end
+            return not result;
+        end);
         elseif(data.sort == "hybrid") then
             table.sort(region.controlledRegions, function(a, b)
-                local aTime;
-                local bTime;
+                if (not b) then return true; end
+                if (not a) then return false; end;
+                local aIndex;
+                local bIndex;
                 if (data.sortHybridTable and data.sortHybridTable[a.dataIndex]) then
-                    aTime = a.dataIndex - 1000;
-                else
-                    aTime = a.region and a.region.state
-                        and a.region.state.expirationTime and a.region.state.expirationTime > 0
-                        and a.region.state.expirationTime or math.huge
-                end;
+                    aIndex = a.dataIndex;
+                end
 
                 if (data.sortHybridTable and data.sortHybridTable[b.dataIndex]) then
-                    bTime = b.dataIndex - 1000;
-                else
-                    bTime = b.region and b.region.state
-                        and b.region.state.expirationTime and b.region.state.expirationTime > 0
-                        and b.region.state.expirationTime or math.huge
+                    bIndex = b.dataIndex;
                 end
-                return (
-                    (aTime) > (bTime)
-                )
+
+                if (aIndex and bIndex) then
+                  return aIndex < bIndex;
+                end
+
+                if (aIndex) then
+                  return data.hybridPosition == "hybridFirst";
+                end
+
+                if (bIndex) then
+                  return data.hybridPosition ~= "hybridFirst";
+                end
+
+                local result = compareExpirationTimes(a, b);
+                if (result == nil) then
+                  return a.dataIndex < b.dataIndex;
+                end
+                if (data.hybridSortMode == "descending") then
+                  result = not result;
+                end
+                return result;
             end);
         elseif(anyIndexInfo) then
             table.sort(region.controlledRegions, function(a, b)
-                if not(a) then
-                    return 1 < 2;
-                elseif not(b) then
-                    return 2 < 1;
-                end
                 return (
                     (
                         a.dataIndex == b.dataIndex
@@ -289,7 +309,7 @@ local function modify(parent, region, data)
         end
         if(numVisible > 0) then
             minX, maxX, minY, maxY = minX or 0, maxX or 0, minY or 0, maxY or 0;
-            if(data.grow == "CIRCLE") then
+            if(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
                 local originX, originY = region:GetCenter();
                 originX = originX or 0;
                 originY = originY or 0;
@@ -373,7 +393,7 @@ local function modify(parent, region, data)
             end
         end
 
-        if not(data.grow == "CIRCLE") then
+        if not(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
             if(data.grow == "RIGHT" or data.grow == "LEFT" or data.grow == "HORIZONTAL") then
                 if(data.align == "LEFT" and data.stagger > 0) then
                     yOffset = yOffset - (data.stagger * (numVisible - 1));
@@ -413,8 +433,11 @@ local function modify(parent, region, data)
 
         local angle = data.rotation or 0;
         local angleInc = 360 / (numVisible ~= 0 and numVisible or 1);
+        if (data.grow == "COUNTERCIRCLE") then
+          angleInc = -angleInc;
+        end
         local radius = 0;
-        if(data.grow == "CIRCLE") then
+        if(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
             if(data.constantFactor == "RADIUS") then
                 radius = data.radius;
             else
@@ -431,7 +454,7 @@ local function modify(parent, region, data)
             childRegion = regionData.region;
             if(childData and childRegion) then
                 if(childRegion.toShow or  WeakAuras.IsAnimating(childRegion) == "finish") then
-                    if(data.grow == "CIRCLE") then
+                    if(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
                         yOffset = cos(angle) * radius * -1;
                         xOffset = sin(angle) * radius;
                         angle = angle + angleInc;
@@ -481,7 +504,7 @@ local function modify(parent, region, data)
                     elseif(data.grow == "DOWN") then
                         hiddenYOffset = yOffset + (childData.height + data.space);
                         hiddenXOffset = xOffset - data.stagger;
-                    elseif(data.grow == "CIRCLE") then
+                    elseif(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
                         hiddenYOffset = cos(angle - angleInc) * radius * -1;
                         hiddenXOffset = sin(angle - angleInc) * radius;
                     end
@@ -551,7 +574,7 @@ local function modify(parent, region, data)
                 previousPreviousX, previousPreviousY = previousX, previousY;
                 if((childRegion.toShow or  WeakAuras.IsAnimating(childRegion) == "finish") and data.animate and not(abs(xDelta) < 0.1 and abs(yDelta) == 0.1)) then
                     local anim;
-                    if(data.grow == "CIRCLE") then
+                    if(data.grow == "CIRCLE" or data.grow == "COUNTERCIRCLE") then
                         local originX, originY = region:GetCenter();
                         local radius1, previousAngle = WeakAuras.GetPolarCoordinates(previousX, previousY, originX, originY);
                         local radius2, newAngle = WeakAuras.GetPolarCoordinates(xOffset, yOffset, originX, originY);

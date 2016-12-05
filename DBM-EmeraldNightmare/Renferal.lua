@@ -1,12 +1,12 @@
 local mod	= DBM:NewMod(1744, "DBM-EmeraldNightmare", nil, 768)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15305 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15495 $"):sub(12, -3))
 mod:SetCreatureID(106087)
 mod:SetEncounterID(1876)
 mod:SetZone()
 mod:SetUsedIcons(1, 2, 3, 4, 5)
-mod:SetHotfixNoticeRev(15278)
+mod:SetHotfixNoticeRev(15357)
 
 mod:RegisterCombat("combat")
 mod:RegisterEventsInCombat(
@@ -56,7 +56,6 @@ local specWarnRakingTalonOther		= mod:NewSpecialWarningTaunt(215582, nil, nil, n
 ----Mythic
 local specViolentWinds				= mod:NewSpecialWarningYou(218124, nil, nil, nil, 3, 2)
 local yellViolentWinds				= mod:NewYell(218124)
-local specWarnViolentWindsOther		= mod:NewSpecialWarningTaunt(218124, nil, nil, nil, 1, 2)
 
 --Spider Form
 mod:AddTimerLine(GetSpellInfo(210326))
@@ -88,7 +87,7 @@ local voiceVenomousPool				= mod:NewVoice(213124)--runaway
 --Roc Form
 local voiceTwistingShadows			= mod:NewVoice(210864)--runout/runaway
 local voiceGatheringClouds			= mod:NewVoice(212707)--aesoon
-local voiceDarkStorm				= mod:NewVoice(212707)--findshelter
+local voiceDarkStorm				= mod:NewVoice(210948)--findshelter
 local voiceRazorWing				= mod:NewVoice(210547)--carefly
 local voiceViolentWinds				= mod:NewVoice(218124)--justrun/keepmove/tauntboss
 local voiceRakingTalon				= mod:NewVoice(215582)--defensive/tauntboss
@@ -259,9 +258,6 @@ function mod:SPELL_AURA_APPLIED(args)
 				voiceViolentWinds:Play("justrun")
 				voiceViolentWinds:Schedule(1, "keepmove")
 				yellViolentWinds:Yell()
-			elseif self.Options.SpecWarn218124taunt then
-				specWarnViolentWindsOther:Show(args.destName)
-				voiceViolentWinds:Play("tauntboss")
 			else
 				warnViolentWinds:Show(args.destName)
 			end
@@ -301,7 +297,7 @@ function mod:SPELL_AURA_APPLIED(args)
 				marker1:EdgeTo(marker2, nil, 10, 1, 0, 0, 0.5)--Red Line
 			end
 		end
-		if self.Options.SetIconOnWeb then
+		if self.Options.SetIconOnWeb and self:IsInCombat() then
 			local uId = DBM:GetRaidUnitId(args.destName)
 			if self:IsTanking(uId) then--Tank Group
 				self:SetIcon(args.sourceName, 1)
@@ -369,14 +365,14 @@ function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 		self.vb.razorWingCast = 0
 		self.vb.windsCast = 0
 		warnRocForm:Show()
-		timerTwistingShadowsCD:Start(7, 1)
+		timerTwistingShadowsCD:Start(6.6, 1)
 		timerGatheringCloudsCD:Start()--15.8-16
 		timerDarkStormCD:Start()--26
 		timerSpiderFormCD:Start()
 		countdownPhase:Start(132)--132-135 (used to be 127, so keep an eye on it)
-		if self:IsMythic() and self.vb.platformCount == 2 then--Only happens platform 2, platform 4 (roc form second cast behaves like non mythic()
+		if self:IsMythic() and self.vb.platformCount == 2 then--Only happens platform 2, platform 4 (roc form second cast behaves like non mythic
 			self.vb.ViolentWindsPlat = true
-			timerViolentWindsCD:Start(16)--10 plus 6 second cast
+			timerViolentWindsCD:Start(56)--50 plus 6 second cast
 			timerRakingTalonsCD:Start(66, 1)
 			timerRazorWingCD:Start(73, 1)
 		else
