@@ -256,12 +256,14 @@ local specialChatIcons = {
 CH.Keywords = {};
 CH.ClassNames = {}
 
+local numScrollMessages
 local function ChatFrame_OnMouseScroll(frame, delta)
+	numScrollMessages = CH.db.numScrollMessages or 3
 	if delta < 0 then
 		if IsShiftKeyDown() then
 			frame:ScrollToBottom()
 		else
-			for i = 1, 3 do
+			for i = 1, numScrollMessages do
 				frame:ScrollDown()
 			end
 		end
@@ -269,7 +271,7 @@ local function ChatFrame_OnMouseScroll(frame, delta)
 		if IsShiftKeyDown() then
 			frame:ScrollToTop()
 		else
-			for i = 1, 3 do
+			for i = 1, numScrollMessages do
 				frame:ScrollUp()
 			end
 		end
@@ -555,21 +557,41 @@ local function removeIconFromLine(text)
 	for i=1, 8 do
 		text = gsub(text, "|TInterface\\TargetingFrame\\UI%-RaidTargetingIcon_"..i..":0|t", "{"..strlower(_G["RAID_TARGET_"..i]).."}")
 	end
-	text = gsub(text, "(|TInterface(.*)|t)", "")
+	text = gsub(text, "|TInterface(.-)|t", "")
 
 	return text
 end
 
-function CH:GetLines(...)
+local function colorizeLine(text, r, g, b)
+	local hexCode = E:RGBToHex(r, g, b)
+	local hexReplacement = format("|r%s", hexCode)
+
+	text = gsub(text, "|r", hexReplacement) --If the message contains color strings then we need to add message color hex code after every "|r"
+	text = format("%s%s|r", hexCode, text) --Add message color
+
+	return text
+end
+
+function CH:GetLines(frame)
 	local index = 1
-	for i = select("#", ...), 1, -1 do
-		local region = select(i, ...)
-		if region:GetObjectType() == "FontString" then
-			local line = tostring(region:GetText())
-			lines[index] = removeIconFromLine(line)
-			index = index + 1
-		end
+	for i = 1, frame:GetNumMessages() do
+		local message, r, g, b = frame:GetMessageInfo(i)
+
+		--Set fallback color values
+		r = r or 1
+		g = g or 1
+		b = b or 1
+
+		--Remove icons
+		message = removeIconFromLine(message)
+
+		--Add text color
+		message = colorizeLine(message, r, g, b)
+
+		lines[index] = message
+		index = index + 1
 	end
+	
 	return index - 1
 end
 
@@ -579,12 +601,7 @@ function CH:CopyChat(frame)
 		if fontSize < 10 then fontSize = 12 end
 		FCF_SetChatWindowFontSize(frame, frame, 0.01)
 		CopyChatFrame:Show()
-		local lineCt
-		if E.wowbuild >= 22882 then
-			lineCt = self:GetLines(frame.FontStringContainer:GetRegions())
-		else
-			lineCt = self:GetLines(frame:GetRegions())
-		end
+		local lineCt = self:GetLines(frame)
 		local text = tconcat(lines, "\n", 1, lineCt)
 		FCF_SetChatWindowFontSize(frame, frame, fontSize)
 		CopyChatFrameEditBox:SetText(text)
@@ -855,13 +872,20 @@ function CH:FindURL(event, msg, ...)
 		return false, msg, ...
 	end
 
+	-- http://example.com
 	local newMsg, found = gsub(msg, "(%a+)://(%S+)%s?", CH:PrintURL("%1://%2"))
 	if found > 0 then return false, CH:GetSmileyReplacementText(CH:CheckKeyword(newMsg)), ... end
-
+	-- www.example.com
 	newMsg, found = gsub(msg, "www%.([_A-Za-z0-9-]+)%.(%S+)%s?", CH:PrintURL("www.%1.%2"))
 	if found > 0 then return false, CH:GetSmileyReplacementText(CH:CheckKeyword(newMsg)), ... end
-
+	-- example@example.com
 	newMsg, found = gsub(msg, "([_A-Za-z0-9-%.]+)@([_A-Za-z0-9-]+)(%.+)([_A-Za-z0-9-%.]+)%s?", CH:PrintURL("%1@%2%3%4"))
+	if found > 0 then return false, CH:GetSmileyReplacementText(CH:CheckKeyword(newMsg)), ... end
+	-- IP address with port 1.1.1.1:1
+	newMsg, found = gsub(msg, "(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)(:%d+)%s?", CH:PrintURL("%1.%2.%3.%4%5"))
+	if found > 0 then return false, CH:GetSmileyReplacementText(CH:CheckKeyword(newMsg)), ... end
+	-- IP address 1.1.1.1
+	newMsg, found = gsub(msg, "(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%s?", CH:PrintURL("%1.%2.%3.%4"))
 	if found > 0 then return false, CH:GetSmileyReplacementText(CH:CheckKeyword(newMsg)), ... end
 
 	msg = CH:CheckKeyword(msg)
@@ -1934,12 +1958,7 @@ function CH:Initialize()
 	E.Chat = self
 	self:SecureHook('ChatEdit_OnEnterPressed')
 	ChatFrameMenuButton:Kill()
-
-	if E.wowbuild >= 22882 then
-		QuickJoinToastButton:Kill()
-	else
-		FriendsMicroButton:Kill()
-	end
+	QuickJoinToastButton:Kill()
 
 	if WIM then
 	  WIM.RegisterWidgetTrigger("chat_display", "whisper,chat,w2w,demo", "OnHyperlinkClick", function(self) CH.clickedframe = self end);
@@ -2094,6 +2113,9 @@ function CH:Initialize()
 	scrollArea:SetScript("OnSizeChanged", function(self)
 		CopyChatFrameEditBox:Width(self:GetWidth())
 		CopyChatFrameEditBox:Height(self:GetHeight())
+	end)
+	scrollArea:HookScript("OnVerticalScroll", function(self, offset)
+		CopyChatFrameEditBox:SetHitRectInsets(0, 0, offset, (CopyChatFrameEditBox:GetHeight() - offset - self:GetHeight()))
 	end)
 
 	local editBox = CreateFrame("EditBox", "CopyChatFrameEditBox", frame)

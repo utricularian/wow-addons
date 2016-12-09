@@ -71,6 +71,7 @@ L["ActionBars"] = "Barras de Ações"
 L["Allow Masque to handle the skinning of this element."] = true;
 L["Alpha"] = "Transparência"
 L["Anchor Point"] = "Ponto de Fixação"
+L["Automatic"] = true;
 L["Backdrop Spacing"] = true;
 L["Backdrop"] = "Fundo"
 L["Button Size"] = "Tamanho do botão"
@@ -95,6 +96,7 @@ L["Display cooldown text on anything with the cooldown spiral."] = "Exibir texto
 L["Display macro names on action buttons."] = "Exibir nomes das macros nos botões de ação."
 L["Global Fade Transparency"] = true;
 L["Expiring"] = "Expirando"
+L["Flyout Direction"] = true;
 L["Height Multiplier"] = "Multiplicador de Altura"
 L["Hide Cooldown Bling"] = true;
 L["Hides the bling animation on buttons at the end of the global cooldown."] = true;
@@ -270,6 +272,7 @@ L["List of words to color in chat if found in a message. If you wish to add mult
 L["Lock Positions"] = "Travar Posições"
 L["Log the main chat frames history. So when you reloadui or log in and out you see the history from your last session."] = "Armazenar o histórico dos quadros principais do bate-papo. Para que possa ver o histórico de sua última sessão ao relogar ou conectar e desconectar."
 L["No Alert In Combat"] = true;
+L["Number of messages you scroll for each step."] = true;
 L["Number of repeat characters while in combat before the chat editbox is automatically closed."] = true;
 L["Number of time in seconds to scroll down to the bottom of the chat window if you are not scrolled down completely."] = "Tempo, em segundos, para rolar o bate-papo até ao fim caso nao tenha rolado completamente."
 L["Panel Backdrop"] = "Fundo do Painel"
@@ -284,6 +287,7 @@ L["Right Only"] = "Somente Direita"
 L["Right Panel Height"] = true;
 L["Right Panel Width"] = true;
 L["Scroll Interval"] = "Intervalo de Rolar"
+L["Scroll Messages"] = true;
 L["Separate Panel Sizes"] = true;
 L["Set the font outline."] = "Definir o contorno de fonte."
 L["Short Channels"] = "Abreviar os Canáis"
@@ -332,10 +336,11 @@ L["ELVUI_CREDITS"] = "Gostaria de agradecer especialmente às seguintes pessoas 
 L["Testing:"] = "Testar:"
 
 --DataBars
-L["DATABAR_DESC"] = "Setup on-screen display of information bars."
 L["Current - Remaining"] = true;
 L["DataBars"] = true;
-L["Hide in Combat"] = true;
+L["Hide In Combat"] = true;
+L["Hide Outside PvP"] = true;
+L["Setup on-screen display of information bars."] = true;
 
 --DataTexts
 L["24-Hour Time"] = "24 horas"
@@ -399,7 +404,6 @@ L["Attempt to support eyefinity/nvidia surround."] = true;
 L["Auto Greed/DE"] = "Escolher Ganância/Desencantar automaticamente"
 L["Auto Repair"] = "Reparar automaticamente"
 L["Auto Scale"] = "Dimensionar automaticamente"
-L["Auto"] = true;
 L["Automatically accept invites from guild/friends."] = "Aceitar convites de pessoas da lista de amigos ou guilda automaticamente"
 L["Automatically repair using the following method when visiting a merchant."] = "Reparar automaticamente usando o seguinte método ao visitar um vendedor."
 L["Automatically scale the User Interface based on your screen resolution"] = "Dimensionar automaticamente a interface com base na sua resolução do ecrã (monitor)."
@@ -745,11 +749,13 @@ L["Add a spell to the filter. Use spell ID if you don't want to match all auras 
 L["Add a spell to the filter."] = "Adicionar um feitiço ao filtro."
 L["Add Spell ID or Name"] = true;
 L["Add SpellID"] = "Adicionar SpellID"
+L["Additional Filter Override"] = true;
 L["Additional Filter"] = "Filtro adicional"
 L["Additional Power Text"] = true;
 L["Affliction"] = "Suplício"
 L["Allow auras considered to be part of a boss encounter."] = true;
 L["Allow Boss Encounter Auras"] = true;
+L["Allow non-personal auras from additional filter when 'Block Non-Personal Auras' is enabled."] = true;
 L["Allow Whitelisted Auras"] = "Permitir Auras da Lista Branca"
 L["An X offset (in pixels) to be used when anchoring new frames."] = true;
 L["An Y offset (in pixels) to be used when anchoring new frames."] = true;

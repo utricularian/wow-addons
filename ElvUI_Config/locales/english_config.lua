@@ -71,6 +71,7 @@ L["ActionBars"] = true;
 L["Allow Masque to handle the skinning of this element."] = true;
 L["Alpha"] = true;
 L["Anchor Point"] = true; --also in unitframes
+L["Automatic"] = true;
 L["Backdrop Spacing"] = true;
 L["Backdrop"] = true;
 L["Button Size"] = true; --Also used in Bags
@@ -94,6 +95,7 @@ L["Display bind names on action buttons."] = true;
 L["Display cooldown text on anything with the cooldown spiral."] = true;
 L["Display macro names on action buttons."] = true;
 L["Expiring"] = true;
+L["Flyout Direction"] = true;
 L["Global Fade Transparency"] = true;
 L["Height Multiplier"] = true;
 L["Hide Cooldown Bling"] = true;
@@ -268,6 +270,7 @@ L["List of words to color in chat if found in a message. If you wish to add mult
 L["Lock Positions"] = true;
 L["Log the main chat frames history. So when you reloadui or log in and out you see the history from your last session."] = true;
 L["No Alert In Combat"] = true;
+L["Number of messages you scroll for each step."] = true;
 L["Number of repeat characters while in combat before the chat editbox is automatically closed."] = true;
 L["Number of time in seconds to scroll down to the bottom of the chat window if you are not scrolled down completely."] = true;
 L["Panel Backdrop"] = true;
@@ -282,6 +285,7 @@ L["Right Only"] = true;
 L["Right Panel Height"] = true;
 L["Right Panel Width"] = true;
 L["Scroll Interval"] = true;
+L["Scroll Messages"] = true;
 L["Separate Panel Sizes"] = true;
 L["Set the font outline."] = true; --Also used in UnitFrames section
 L["Short Channels"] = true;
@@ -321,10 +325,11 @@ L["ELVUI_CREDITS"] = "I would like to give out a special shout out to the follow
 L["Testing:"] = true;
 
 --DataBars
-L["DATABAR_DESC"] = "Setup on-screen display of information bars."
 L["Current - Remaining"] = true;
 L["DataBars"] = true;
-L["Hide in Combat"] = true;
+L["Hide In Combat"] = true;
+L["Hide Outside PvP"] = true;
+L["Setup on-screen display of information bars."] = true;
 
 --DataTexts
 L["24-Hour Time"] = true;
@@ -388,7 +393,6 @@ L["Attempt to support eyefinity/nvidia surround."] = true;
 L["Auto Greed/DE"] = true;
 L["Auto Repair"] = true;
 L["Auto Scale"] = true;
-L["Auto"] = true;
 L["Automatically accept invites from guild/friends."] = true;
 L["Automatically repair using the following method when visiting a merchant."] = true;
 L["Automatically scale the User Interface based on your screen resolution"] = true;
@@ -734,11 +738,13 @@ L["Add a spell to the filter. Use spell ID if you don't want to match all auras 
 L["Add a spell to the filter."] = true;
 L["Add Spell ID or Name"] = true;
 L["Add SpellID"] = true;
+L["Additional Filter Override"] = true;
 L["Additional Filter"] = true;
 L["Additional Power Text"] = true;
 L["Affliction"] = true;
 L["Allow auras considered to be part of a boss encounter."] = true;
 L["Allow Boss Encounter Auras"] = true;
+L["Allow non-personal auras from additional filter when 'Block Non-Personal Auras' is enabled."] = true;
 L["Allow Whitelisted Auras"] = true;
 L["An X offset (in pixels) to be used when anchoring new frames."] = true;
 L["An Y offset (in pixels) to be used when anchoring new frames."] = true;
