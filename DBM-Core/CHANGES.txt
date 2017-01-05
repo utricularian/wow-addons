@@ -1,173 +1,301 @@
-tag 00311ebbcb0aa59ce206d6b7307ef8a6eecddec5 7.1.4
+tag 69e3c13dd0640771c1101824887d7fe9c03e126a 7.1.6
 Author:	subversion <svn@deadlybossmods.com>
-Date:	Sat Nov 26 23:39:31 2016 +0100
+Date:	Tue Dec 27 11:27:47 2016 +0100
 
-Tagging as 7.1.4
+Tagging as 7.1.6
 
-commit 956894465112abf252901acc33ad3954315084fc
+commit 1fc4d0ffd0ca2b89b5d986f7545ad8b71ceed43d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 23:39:31 2016 +0100
+Date:   Tue Dec 27 11:27:47 2016 +0100
 
-    increment version number to 7.1.4
+    increment version number to 7.1.6
 
-commit 7bff9a3772578cc004497c68e72540ca4005b8d3
+commit 1c31d9cc45944b3b8d99a4bc94162d87ea8f8e4d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 23:33:19 2016 +0100
+Date:   Tue Dec 27 02:39:25 2016 +0100
 
-    Omega via svn r15512:
-    The final taint timer confirmed and one minor adjust on final orbs from a fresh berserk log
+    Omega via svn r15610:
+    give greench a little more buffer before calling a wipe and less buffer for recombat in case a false wipe does happen, mod should re-enrage sooner. Since this bosses antics can cause you to randomly enter/leave combat.
 
-commit a1c63bbe2ef8d3152df0e0dead97e9a7e6c6e71e
+commit e66cb072a50368c37ce6f6f762b70e7e2a863e83
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 23:17:35 2016 +0100
+Date:   Mon Dec 26 21:20:19 2016 +0100
 
-    Omega via svn r15511:
-    Completely scrap chest timers for mythic+ dungeons. it?\226?\128?\153s buggy and clearly blizzard doesn?\226?\128?\153t provide adequate and non buggy events to really do it efficiently and I?\226?\128?\153m not going to ugly up dbms code to work around that. Use https://wow.curseforge.com/projects/mythicplustimer instead.
-    Also, the objectives frame will no longer ever be hidden in mythic+ dungeons because the mythic+ temp timer has also been deleted from DBM. For same reasons as above. It?\226?\128?\153s buggy and hard to make work properly without proper detailed non buggy apis to work with. Besides this second thing was really me trying to fix bad design but often times fixing bad blizzard design often gives them an out for fixing it themselves.
+    Omega via svn r15609:
+    Korean update
 
-commit 68a5cc06cd25bce607b1ad2b18f7ce92eb697754
+commit af9305d22d0fffdadad14a1be41c6566302eb016
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 22:28:49 2016 +0100
+Date:   Sun Dec 25 02:23:08 2016 +0100
 
-    Omega via svn r15510:
-    More minor fixes to mythic+ timer nonsense. probably still doesn?\226?\128?\153t cancel properly and will probably still get removed as a feature soon if blizzards game wants to keep being buggy about it.
+    Omega via svn r15608:
+    Text corrections
 
-commit dfca76eab67d724cf473def6c44d091b7de4af63
+commit 2deb58a6b55297af05b6ecfb84cce5422e5e8b40
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 22:06:45 2016 +0100
+Date:   Sun Dec 25 02:12:09 2016 +0100
 
-    Omega via svn r15509:
-    Give odyn a phase 3 announce as well, he only had a 2 announce
+    Omega via svn r15607:
+    Fixed a bug where mythic + best times was recording all keystone ranks as rank 0 and saving best times if they are lower regardless of rank. Now DBM will only save best time if it?\226?\128?\153s better than last time for same rank, OR it?\226?\128?\153ll overwrite best time even if it?\226?\128?\153s higher, if it?\226?\128?\153s a new high rank.
+    Some stats refactoring for kara Cos and arcway in anticipation of returning difficulties
 
-commit b9ec3957ec4715d458593627016651f938da98ed
+commit 98611ca6452f7a93a928b20a4fdf17215b801774
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 22:05:09 2016 +0100
+Date:   Sun Dec 25 01:02:36 2016 +0100
 
-    Omega via svn r15508:
-    Add general phase announces as well
+    Omega via svn r15606:
+    German Update
 
-commit 92971e67cbe1a6e22041aa15f1e719646d834eec
+commit 479a1865bbcfe78f8bc1011f55354b56b4a59d06
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 22:03:20 2016 +0100
+Date:   Sat Dec 24 04:27:07 2016 +0100
 
-    Omega via svn r15507:
-    watch all boss unit IDs instead of just 1, apparently helya boss Id can change to not boss1?
+    Omega via svn r15605:
+    Calamir now has correct timers and more working warnings.
 
-commit e5afc3732509cf490b4c420719ec44f32131f769
+commit e55cbb04e5c1d6faa89c056b82d8003de8089459
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 21:40:36 2016 +0100
+Date:   Sat Dec 24 03:54:49 2016 +0100
 
-    Omega via svn r15506:
-    Boss name in respawn timer
+    Omega via svn r15604:
+    Update Beauty and beast timers
 
-commit 21928cfbf9995c4d18dfa0716601726ab897c4e6
+commit 2a1e5550f5ac54f061a26eb1699b5b76e6e276af
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 21:14:12 2016 +0100
+Date:   Sat Dec 24 03:45:05 2016 +0100
 
-    Omega via svn r15505:
-    minor coding tweak
+    Omega via svn r15603:
+    Fixed bug where Burning bones timer had wrong spellid so it was jacking up the charred earth timer as well as never showing a burning bones timer. This fixes two timers on nightbane.
+    Added nightbanes respawn time
+    Added option to set icon on ignite soul on nightbane
 
-commit a22dd75c7a9eb8edf8da889b4226e71045c0ee43
+commit d53bedbe3f04df73e6976fbaa0591f4ec38e6a6f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 07:42:18 2016 +0100
+Date:   Sat Dec 24 02:25:41 2016 +0100
 
-    Omega via svn r15504:
-    minor coding tweak
+    Omega via svn r15602:
+    scrap spammy burning blade stuff that didn?\226?\128?\153t work.
 
-commit d8685bd04dfa6e0a6fe49305c702ccaa6c3a82e4
+commit 3451c0216cc3dc2cb00233531fc0a776ced7aa34
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 06:17:12 2016 +0100
+Date:   Fri Dec 23 23:23:11 2016 +0100
 
-    Omega via svn r15503:
-    RU update
+    Omega via svn r15601:
+    And spelling!
 
-commit 647e4d63d109cc7b95cee8657048b253e9b82824
+commit ae68a16cb3b9c750e156bb715e67fc02a7fda50d
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 04:00:15 2016 +0100
+Date:   Fri Dec 23 23:22:27 2016 +0100
 
-    Omega via svn r15502:
-    Add LFR berserk to guarm
+    Omega via svn r15600:
+    and complete sentences are useful too
 
-commit 73c359df27d6844876d2143e40ca22170b3c9c45
+commit 548f6560cb4edcf02c3b513031f1598f3892dbad
 Author: subversion <svn@deadlybossmods.com>
-Date:   Sat Nov 26 00:34:46 2016 +0100
+Date:   Fri Dec 23 23:20:35 2016 +0100
 
-    Omega via svn r15501:
-    Apparently have to add the 10 seconds onto timer because it starts but doesn?\226?\128?\153t really start at the start event. go figure
+    Omega via svn r15599:
+    Fix reverse logic
 
-commit 0e02a7bb0f67596bd1d87e308babf0049fae718b
+commit 7745d6a6ad934d8b95f573dcad62b82132fe233c
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 25 19:38:58 2016 +0100
+Date:   Fri Dec 23 23:09:25 2016 +0100
 
-    Omega via svn r15500:
-    Another timer fix.
+    Omega via svn r15598:
+    Use correct table check to improve last so countdown only packs don?\226?\128?\153t trigger it
 
-commit 6660bbd8612ffeaf5c99bd958e05f4361113223c
+commit 8e1cacb5b1e8405b04b995591a56edd2aa89b19b
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 25 19:05:29 2016 +0100
+Date:   Fri Dec 23 22:57:57 2016 +0100
 
-    Omega via svn r15499:
-    Fix bug with orb text.
+    Omega via svn r15597:
+    *Clean up old VP migratino code that shouldn?\226?\128?\153t be needed anymore
+    *Add a warning for users to have voice packs installed but not properly enabled so they are aware that just installing it doesn?\226?\128?\153t complete the setup.
 
-commit d8b423ad25986ceae86e297b10be597f1d623ad4
+commit e7850a51e98e4552aea4867f96d0dcf20fae553e
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 25 10:31:35 2016 +0100
+Date:   Fri Dec 23 22:42:49 2016 +0100
 
-    ultrashining via svn r15498:
-    zhTW update
+    Omega via svn r15596:
+    Also change this to count warning too
 
-commit f290c7052284f457f5200742810b182cff59fbde
+commit 834ec78ba5768ab80a78ee511a739340252fcaad
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 25 09:45:34 2016 +0100
+Date:   Fri Dec 23 22:03:24 2016 +0100
 
-    Omega via svn r15497:
-    Clarify, for translators
+    Omega via svn r15595:
+    *Change voice warnings for Odyn to ?\226?\128?\156move to mark >name<?\226?\128?\156 instead of cardinal directions. Cardinal directions not easy to identify in a round room without staring at minimap. Better voice files will be added in future that say color name instead of icon name for groups that do not set raid flares)
+    *Changed some timers on odyn and helya to shorter text short names if short name option is enabled
+    *Added count to breath warnings and timers on helya.
+    *CN Update
 
-commit aa0f08c66d2107a25b549b2e5c2659ca0b13b2fc
+commit d0dc031c535f7e25c63ebf40134d7bdc4ae3557f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 25 09:44:40 2016 +0100
+Date:   Thu Dec 22 06:28:14 2016 +0100
 
-    Omega via svn r15496:
-    Localize ?\226?\128?\156Chest?\226?\128?\157
-    Add failsafes against maxTime and elapsed time being nil
+    Omega via svn r15594:
+    Split the add timers into their own, by actual name. change icons and add inline icon
 
-commit fb5dee51b92b19a0196590390462516725afffc6
+commit e91b07f3dc48ccff7396c6c629ba6a39913fa304
 Author: subversion <svn@deadlybossmods.com>
-Date:   Fri Nov 25 06:49:13 2016 +0100
+Date:   Thu Dec 22 05:37:45 2016 +0100
 
-    Omega via svn r15495:
-    #Helya
-    *Improved tentacle strike code so warning is slightly faster and less antispam is needed.
-    *Cancel cast bar for infusion when interrupted
-    *Update fury of maw timer if infusion isn?\226?\128?\153t interrupted
-    *Fixed fury of maw phase 3 mythic timer. Accidentally pasted phase 2 mythic timer into phase 3 somehow.
-    *Fixed phase 3 taint of sea timers not showing, the unit event doesn?\226?\128?\153t show in phase 3.
-    #Guarm
-    *Added optional off by default yells to the other 2 licks on guarm. I still think they are pointless but the other mod does it so i figure someone will ask for them eventually so make it an option.
-    
-    #random nightmare fixes
-    *Fixed a voice pack bug where dark storm voice option had wrong spell id in it, causing special warning sound to still play on top of voice sound, as well as the voice option to not appear in UI.
-    *Changed mark timer to be off by default on dragons since most don?\226?\128?\153t use that either. more clutter reduction. Further, there is a bug where the two dragons can sometimes desync as much as 2 seconds on applying this buff. when this happens timer ends up getting screwed up anyways.
+    Omega via svn r15593:
+    Fixes infoframe
 
-commit 2e91776afb00a9d24a12b8213ebf6fcf4d663785
+commit a32a040d9481e5bc119fe61483b5027b6b54ea1f
 Author: subversion <svn@deadlybossmods.com>
-Date:   Thu Nov 24 19:40:30 2016 +0100
+Date:   Thu Dec 22 04:39:07 2016 +0100
 
-    Omega via svn r15494:
-    KR update
+    Omega via svn r15592:
+    Minor tweaks, more to come
 
-commit 0f395c07a9c8520d836029c8364bed6e0795d8b9
+commit 88ee979dcdb0b0f691b72cee04e462b2d25db547
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Nov 23 02:52:55 2016 +0100
+Date:   Thu Dec 22 03:36:52 2016 +0100
 
-    Omega via svn r15493:
-    Fix infoframe bug on guarm where it only showed two of 3 debuffs (showed one of them twice)
-    Fixed warnings so they also fire for JUMPed debuffs as well on guarm
+    Omega via svn r15591:
+    should be six lines
 
-commit 58de5d41d7f703c0833907069976b3fd1689a2a7
+commit 1059a706683cb8419e58ae058d65c4cef5c7cde3
 Author: subversion <svn@deadlybossmods.com>
-Date:   Wed Nov 23 01:18:52 2016 +0100
+Date:   Thu Dec 22 02:46:04 2016 +0100
 
-    tandanu via svn r15492:
+    Omega via svn r15590:
+    tweak tank timer defaults on xavious to disable timers for things that never target tanks
+
+commit 975cac5a0a4045297aa3adc70b76fafb13be7eb3
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Dec 21 22:40:12 2016 +0100
+
+    Omega via svn r15589:
+    Add auto marking for stance of mountain
+
+commit 24df7b623ab825aed4260dcb6dd49caf9cd7f21a
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Dec 20 10:59:51 2016 +0100
+
+    Omega via svn r15588:
+    Add Fel Prison to Violet Hold Trash
+
+commit 14904a0c16efeaa4e63268569f3d5e0792079aa1
+Author: subversion <svn@deadlybossmods.com>
+Date:   Mon Dec 19 23:02:29 2016 +0100
+
+    Omega via svn r15587:
+    Try to translate text on infoframe and chat message. This may actually completely break spy helper since it?\226?\128?\153s a dirty hack way of doing it (because the syncs have to still use a common local so this translating has to be done post sync).
+
+commit 7967323d916466f91d70deab5db8f392ba69d661
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Dec 17 23:53:15 2016 +0100
+
+    Omega via svn r15586:
+    german update
+
+commit 66b0a2826adab3d163c18640de652840a874768b
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Dec 17 18:42:35 2016 +0100
+
+    Omega via svn r15585:
+    Add potions 4
+
+commit a55fac39201ddb0a4edf39ee41a378911de0114c
+Author: subversion <svn@deadlybossmods.com>
+Date:   Sat Dec 17 00:43:03 2016 +0100
+
+    Omega via svn r15584:
+    Push first round of guldan updates
+
+commit 7b3425e3906b12a891b2f33f77fba0a69e3cb452
+Author: subversion <svn@deadlybossmods.com>
+Date:   Fri Dec 16 08:35:11 2016 +0100
+
+    Omega via svn r15583:
+    Continue expanding german strings for court of stars spy event
+
+commit aa303ff20cebb3065e8d3914b4938ed76cbc482d
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 23:10:25 2016 +0100
+
+    Omega via svn r15582:
+    Bump BW version
+
+commit 1bea387b1b553b7448b6c448366483c14b8ffbb1
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 23:01:23 2016 +0100
+
+    Omega via svn r15581:
+    Fixed bug where yellow branded warning never fired on mythic (all others did)
+
+commit c05abfba51e8474692cdb5c675aebf02bb67b3a9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 07:05:16 2016 +0100
+
+    Omega via svn r15580:
+    Actually for time being just assume this
+
+commit 0dcedc43562692a2094a4ce37402ca5f2ded3da4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 07:03:48 2016 +0100
+
+    Omega via svn r15579:
+    Forgot, use heroic timers for heroic
+
+commit 4e1212d68761b0a95ae65edd9fa402bde0beb2a4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 06:37:43 2016 +0100
+
+    Omega via svn r15578:
+    simplify ring code to not use the 4 spell ids spread across two different events. instead just use chat yell. if yell not localized fallback on the slightly slower emote, period.
+    Re-enable ring timers with simplified code.
+    Added a switch warning to slimes on helya.
+
+commit 2bf3c4b68636a62f4355057a6538fc44e521534d
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 04:27:34 2016 +0100
+
+    Omega via svn r15577:
+    scrap normal/LFR/heroic lick timers. they are variable as hell and too unreliable. not as reliable as mythic
+
+commit e98f71e4d9fbc58cb64655f602ff691c944c302d
+Author: subversion <svn@deadlybossmods.com>
+Date:   Thu Dec 15 03:28:11 2016 +0100
+
+    Omega via svn r15576:
+    Fix typo
+
+commit 4b1a8368ed2733b0c9e2c33484e5189099c846e4
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Dec 14 20:33:36 2016 +0100
+
+    Omega via svn r15575:
+    Tweak timer
+
+commit 679e6a85ea60cde19d416bb489796e66ff5ef851
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Dec 14 08:01:37 2016 +0100
+
+    Omega via svn r15574:
+    Add note that elisande mod won?\226?\128?\153t work correctly until live probably
+
+commit 7c4ff18efcb6109864d3c0dcc85dcd1da0f9c2c9
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Dec 14 08:00:29 2016 +0100
+
+    Omega via svn r15573:
+    I?\226?\128?\153m at a stalemate with elisande. because they completely redesigned fight and I didn?\226?\128?\153t get to see it, I can?\226?\128?\153t make heads or tales of logs. Especiallly since fight was so overtuned no one got any long enough pulls. As such I?\226?\128?\153m pretty much deleting all timers and just fixing up warnings so they work correctly with all the new spellIds
+
+commit fa44b3d81ecf956d76ac8a25a1cdb7607760e3c8
+Author: subversion <svn@deadlybossmods.com>
+Date:   Wed Dec 14 05:33:21 2016 +0100
+
+    Omega via svn r15572:
+    bump HF on some mods
+
+commit 9d7d815a14025777d268d4dd116b48ffdceee356
+Author: subversion <svn@deadlybossmods.com>
+Date:   Tue Dec 13 16:49:44 2016 +0100
+
+    tandanu via svn r15571:
     increment alpha version
 
