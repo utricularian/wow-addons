@@ -272,6 +272,7 @@ function rematch:UpdateShareIncludes(force)
 	incl.IncludeNotes.text:SetFontObject(hasNotes and "GameFontNormalSmall" or "GameFontDisableSmall")
 	return force or hasNotes or hasPref
 end
+
 -- onclick of checkbox will directly change setting
 function rematch:ShareIncludeOnClick()
 	settings[self.var] = not self:GetChecked()
@@ -283,7 +284,7 @@ end
 --[[ Import Dialog ]]
 
 function rematch:ShowImportDialog()
-	local dialog = rematch:ShowDialog("ImportDialog",340,306,L["Import Team"],nil,SAVE,share.AcceptImport,CANCEL)
+	local dialog = rematch:ShowDialog("ImportDialog",340,306,L["Import Team"],nil,SAVE,share.AcceptImport,CANCEL,share.ImportDialogOnHide,L["Load"],share.ImportLoadTeamOnly)
 	share:SetPoint("TOP",0,-36)
 	share:Show()
 	share.TopText:SetText(L["Press Ctrl+V to paste a team from the clipboard."])
@@ -297,12 +298,28 @@ function rematch:ShowImportDialog()
 	dialog.TabPicker:SetPoint("TOP",dialog.MultiLine,"BOTTOM",0,-12)
 	dialog.TabPicker:Show()
 	dialog.Accept:Disable()
+
+	dialog.Other:SetScript("OnEnter",share.ShowImportLoadTooltip)
+	dialog.Other:SetScript("OnLeave",rematch.HideTooltip)
 end
 
--- temporary imported teams are not saved permanently and are only loaded
--- these teams have an npcID of 1
-function rematch:ShowTempImportDialog()
-	rematch:ShowImportDialog()
+function share:ShowImportLoadTooltip()
+	rematch.ShowTooltip(self,L["Only Load This Team"],L["This will only load the team and not save it.\n\nThis is for loading teams you do not intend to use more than once, like Family Familiar teams."])
+end
+
+function share:ImportDialogOnHide()
+	rematch.Dialog.Other:SetScript("OnEnter",nil)
+	rematch.Dialog.Other:SetScript("OnLeave",nil)
+end
+
+-- for the "Load" button on the import dialog; saves the team to npcID 1 and loads it
+function share:ImportLoadTeamOnly()
+	local title = rematch:GetSidelineTitle()
+	rematch:ChangeSidelineKey(1) -- changing key to 1, special npcID for imported team
+	rematch:GetSideline().teamName = title -- keep name of team still
+	rematch:SetSidelineContext("receivedTeam",true)
+	rematch:PushSideline()
+	rematch:LoadTeam(1) -- load npcID
 end
 
 -- returns true if the passed name,npcID form an already-used team key
@@ -427,6 +444,7 @@ function share:ImportEditBoxOnTextChanged()
 
 	local dialog = rematch.Dialog
 	dialog.Accept:SetEnabled(numTeams and numTeams>0)
+	dialog.Other:SetEnabled(numTeams==1)
 	dialog:SetContext("numTeams",numTeams)
 
 	if text:len()==0 then -- nothing in editbox, show minimal dialog awaiting input
@@ -507,6 +525,7 @@ function share:AcceptImport()
 		rematch:PushSideline()
 		local team,key = rematch:GetSideline()
 		rematch:ShowTeam(key)
+		rematch:LoadTeam(key)
 	elseif numTeams and numTeams>1 then -- multiline import
 		if not rematch:GetSidelineContext("plain") then -- importing string format
 			local teamStrings = {}

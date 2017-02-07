@@ -1,12 +1,107 @@
-tag 5f792559f05e180093549a886e599f158a7e1dad 2.2.2.4
+tag 2a98a2720fd4f4a707bb4cb2a90fbd50f7086fb8 2.3.0.0
 Author:	Benjamin Staneck <staneck@gmail.com>
-Date:	Mon Dec 12 23:08:03 2016 +0100
+Date:	Mon Jan 30 22:45:45 2017 +0100
 
-commit 097f9e99bd8428dc32076b90add68d834eff3477
+This release brings you the possibility to drag and drop to reorder auras inside and in and out of groups. This was a community contribution by Janick Gerstenberger on GitHub.
+
+commit a4399c778a1d2e7577e6f0344f5e51b4761f4739
 Author: Benjamin Staneck <staneck@gmail.com>
-Date:   Mon Dec 12 23:07:04 2016 +0100
+Date:   Mon Jan 30 21:37:44 2017 +0100
 
-    Revert "Use SetClipsChildren for Texture and Icon Frame"
+    add AceGUI widgets to the locale scraper
+
+commit fa570bc6eec7819035981aab6205379ec9e4a988
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Mon Jan 30 21:33:17 2017 +0100
+
+    move babelfish script to the root
+
+commit 85ae96f463d49a7ff20ba5f1260f2d94ea079c6e
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Mon Jan 30 21:29:26 2017 +0100
+
+    add "Drag to move" hint to buttons
+
+commit 4d78e3e2ba986797db56b17247bc0d7cfc395ef8
+Author: Benjamin Staneck <staneck@gmail.com>
+Date:   Sat Jan 28 18:42:06 2017 +0100
+
+    increment minor version of WeakAurasDisplayButton
+
+commit 31c6f6d123848a518a8438abff5313696f07faff
+Author: Infus <infus@squorn.de>
+Date:   Sat Jan 28 17:04:24 2017 +0100
+
+    Fix glow frame looking dim
     
-    This reverts commit 4f8aac7277b4175cb2a14e5e854ba11a5bd5f84e.
+    The glow needs to be in front of other child frames of the region.
+    
+    Try to ensure that.
+    
+    Ticket-Nr: 833
+
+commit 0e1b43d0e23e2c169461677316d4267e4cc85668
+Author: Infus <infus@squorn.de>
+Date:   Sat Jan 28 15:56:27 2017 +0100
+
+    Fix ignore rune cd again
+    
+    Broke that accidentally with the change for Epidemic.
+    
+    The intent behind this code is this:
+    
+    Epidemic is a spell with charges, thus GetSpellCharges is the right api.
+    
+    We compare durations between the cooldown duration and rune cd duration
+    to figure out whether a spell is on cooldown only for a rune.
+    
+    But Epidemic has the same cooldown duration as runes.
+    
+    Luckily, GetSpellCharges doesn't adjust it's output based on rune cds.
+    
+    Thus, we can be sure that any cooldown returned by it cannot be due
+    to a rune cd.
+    
+    Ticket-Nr: 835
+
+commit e3799d3f062468d8555cabb90a36a9c56c7421de
+Author: Infus <infus@squorn.de>
+Date:   Sat Jan 28 00:40:45 2017 +0100
+
+    Fix attaching to other auras
+    
+    Since the order in which the auras are created is somewhat random,
+    we must create the anchor frame if it doesn't yet exist.
+    
+    Ticket-Nr: 840
+
+commit 02998216f669a354ef57bf4ffce1edf34ac03f21
+Author: Infus <infus@squorn.de>
+Date:   Sat Jan 28 00:21:49 2017 +0100
+
+    Attach to KuiNameplates: Adjust to upstream change
+
+commit 9f0cbf03da7134c730cef5f4902b1ceb0c4cbdb3
+Author: Infus <infus@squorn.de>
+Date:   Sat Jan 28 00:21:09 2017 +0100
+
+    Replace \n with newlines in ReplacePlaceHolders
+    
+    Ticket-Nr: 841
+
+commit 8958259b3525a1063071c7a8e2dad61bbd53d792
+Author: Janick Gerstenberger <janick.gerstenberger@gmail.com>
+Date:   Mon Jan 23 19:11:38 2017 +0100
+
+    Drag'n'Drop implementation for DisplayButtons (#136)
+    
+    This PR implements drag'n'drop support to the `DisplayButton`s in the Options.
+    Feature and Design is descripted in some [sketches](https://drive.google.com/drive/folders/0BzaKJginnJcgM3dHWUdDQlNRZGM?usp=sharing).
+    
+    The implemented features make several `DisplayButton` controls in their current form obsolete.
+    Chiefly the side control of grouped buttons (up, down, ungroup) which also distinguish grouped buttons from ungrouped one.
+    (see https://www.wowace.com/projects/weakauras-2/issues/790 )
+    
+    ### Issues
+    -  Dropping a element below the list of `DisplayButton` into the scroll frame or onto a category rider undos the drag action. This behavior might be unexpexted.
 

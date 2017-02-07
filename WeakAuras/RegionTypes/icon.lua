@@ -20,6 +20,7 @@ local default = {
     stacksContainment = "INSIDE",
     selfPoint = "CENTER",
     anchorPoint = "CENTER",
+    anchorFrameType = "SCREEN",
     xOffset = 0,
     yOffset = 0,
     font = "Friz Quadrata TT",
@@ -31,9 +32,6 @@ local default = {
     customTextUpdate = "update"
 };
 
-local function SkinChanged(skinID, gloss, backdrop, colors, button)
-
-end
 
 local function GetTexCoord(region, texWidth)
     local texCoord
@@ -125,6 +123,9 @@ local function create(parent, data)
       SetFrameLevel(region, level);
       cooldown:SetFrameLevel(level);
       stacksFrame:SetFrameLevel(level + 1);
+      if (self.__WAGlowFrame) then
+        self.__WAGlowFrame:SetFrameLevel(level + 1);
+      end
       if button then
         button:SetFrameLevel(level);
       end
@@ -145,12 +146,6 @@ local function modify(parent, region, data)
         button.data = data
     end
 
-    if(data.frameStrata == 1) then
-        region:SetFrameStrata(region:GetParent():GetFrameStrata());
-    else
-        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
-    end
-
     region:SetWidth(data.width);
     region:SetHeight(data.height);
     if MSQ then
@@ -161,7 +156,14 @@ local function modify(parent, region, data)
     icon:SetAllPoints();
 
     region:ClearAllPoints();
-    region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
+    local anchorFrame = WeakAuras.GetAnchorFrame(data.id, data.anchorFrameType, parent, data.anchorFrameFrame);
+    region:SetParent(anchorFrame);
+    region:SetPoint(data.selfPoint, anchorFrame, data.anchorPoint, data.xOffset, data.yOffset);
+    if(data.frameStrata == 1) then
+        region:SetFrameStrata(region:GetParent():GetFrameStrata());
+    else
+        region:SetFrameStrata(WeakAuras.frame_strata_types[data.frameStrata]);
+    end
 
     local fontPath = SharedMedia:Fetch("font", data.font);
     local sxo, syo = 0, 0;

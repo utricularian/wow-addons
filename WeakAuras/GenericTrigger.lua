@@ -37,22 +37,22 @@ CanGroupShowWithZero(data)
   If that is the case no automatic icon can be determined. Only used by the Options dialog.
   (If I understood the code correctly)
 
-CanHaveDuration(data)
+CanHaveDuration(data, triggernum)
   Returns whether the trigger can have a duration
 
-CanHaveAuto(data)
+CanHaveAuto(data, triggernum)
   Returns whether the icon can be automatically selected
 
 CanHaveClones(data)
   Returns whether the trigger can have clones
 
-CanHaveTooltip(data)
+CanHaveTooltip(data, triggernum)
   Returns the type of tooltip to show for the trigger
 
-GetNameAndIcon(data)
+GetNameAndIcon(data, triggernum)
     Returns the name and icon to show in the options
 
-GetAdditionalProperties(data)
+GetAdditionalProperties(data, triggernum)
   Returns the a tooltip for the additional properties
 ]]--
 
@@ -794,7 +794,8 @@ function GenericTrigger.Add(data, region)
         end
 
         local automaticAutoHide = true;
-        if (event_prototypes[trigger.event] and event_prototypes[trigger.event].automaticAutoHide ~= nil) then
+        if ((triggerType == "status" or triggerType == "event")
+             and event_prototypes[trigger.event] and event_prototypes[trigger.event].automaticAutoHide ~= nil) then
           automaticAutoHide = event_prototypes[trigger.event].automaticAutoHide;
         end
         events[id] = events[id] or {};
@@ -1177,6 +1178,7 @@ do
   local spellCdExpsRune = {};
   local spellCharges = {};
   local spellCdHandles = {};
+  local spellCdRuneHandles = {};
 
   local items = {};
   local itemCdDurs = {};
@@ -1296,13 +1298,24 @@ do
     WeakAuras.ScanEvents("RUNE_COOLDOWN_READY", id);
   end
 
+  local function SpellCooldownRuneFinished(id)
+    spellCdRuneHandles[id] = nil;
+    spellCdDursRune[id] = nil;
+    spellCdExpsRune[id] = nil;
+    local charges = GetSpellCharges(id);
+    local chargesDifference = (charges or 0) - (spellCharges[id] or 0)
+    if (chargesDifference ~= 0 ) then
+      WeakAuras.ScanEvents("SPELL_CHARGES_CHANGED", id, chargesDifference, charges or 0);
+    end
+    spellCharges[id] = charges
+    WeakAuras.ScanEvents("SPELL_COOLDOWN_READY", id, nil);
+  end
+
   local function SpellCooldownFinished(id)
     spellCdHandles[id] = nil;
     spellCdDurs[id] = nil;
     spellCdExps[id] = nil;
-    spellCdDursRune[id] = nil;
-    spellCdExpsRune[id] = nil;
-    local charges = select(2, GetSpellCharges(id));
+    local charges = GetSpellCharges(id);
     local chargesDifference =  (charges or 0) - (spellCharges[id] or 0)
     if (chargesDifference ~= 0 ) then
       WeakAuras.ScanEvents("SPELL_CHARGES_CHANGED", id, chargesDifference, charges or 0);
@@ -1405,12 +1418,15 @@ do
   function WeakAuras.CheckSpellCooldows(runeDuration)
     for id, _ in pairs(spells) do
       local charges, maxCharges, startTime, duration = GetSpellCharges(id);
+      local cooldownBecauseRune = false;
       if (charges == nil) then -- charges is nil if the spell has no charges
         startTime, duration = GetSpellCooldown(id);
         charges = GetSpellCount(id);
+        cooldownBecauseRune = duration and abs(duration - runeDuration) < 0.001;
       elseif (charges == maxCharges) then
         startTime, duration = 0, 0;
       end
+
       startTime = startTime or 0;
       duration = duration or 0;
       local time = GetTime();
@@ -1432,9 +1448,10 @@ do
           spellCdDurs[id] = duration;
           spellCdExps[id] = endTime;
           spellCdHandles[id] = timer:ScheduleTimer(SpellCooldownFinished, endTime - time, id);
-          if (spellsRune[id] and abs(duration - runeDuration) > 0.001 ) then
+          if (spellsRune[id] and not cooldownBecauseRune ) then
             spellCdDursRune[id] = duration;
             spellCdExpsRune[id] = endTime;
+            spellCdRuneHandles[id] = timer:ScheduleTimer(SpellCooldownRuneFinished, endTime - time, id);
           end
           WeakAuras.ScanEvents("SPELL_COOLDOWN_STARTED", id);
         elseif(spellCdExps[id] ~= endTime or chargesChanged) then
@@ -1448,9 +1465,14 @@ do
           if (maxCharges == nil or charges + 1 == maxCharges) then
             spellCdHandles[id] = timer:ScheduleTimer(SpellCooldownFinished, endTime - time, id);
           end
-          if (spellsRune[id] and abs(duration - runeDuration) > 0.001 ) then
+          if (spellsRune[id] and not cooldownBecauseRune ) then
             spellCdDursRune[id] = duration;
             spellCdExpsRune[id] = endTime;
+
+            if(spellCdRuneHandles[id]) then
+              timer:CancelTimer(spellCdRuneHandles[id]);
+            end
+            spellCdRuneHandles[id] = timer:ScheduleTimer(SpellCooldownRuneFinished, endTime - time, id);
           end
           WeakAuras.ScanEvents("SPELL_COOLDOWN_CHANGED", id);
         end
@@ -1464,6 +1486,11 @@ do
               timer:CancelTimer(spellCdHandles[id]);
             end
             SpellCooldownFinished(id);
+
+            if(spellCdRuneHandles[id]) then
+              timer:CancelTimer(spellCdRuneHandles[id]);
+            end
+            SpellCooldownRuneFinished(id);
           end
         end
         if (chargesChanged) then
@@ -1633,9 +1660,19 @@ do
         local endTime = startTime + duration;
         spellCdDurs[id] = duration;
         spellCdExps[id] = endTime;
-        if (duration ~= 10 and ignoreRunes) then
+        local runeDuration = -100;
+        for id, _ in pairs(runes) do
+          local startTime, duration = GetRuneCooldown(id);
+          startTime = startTime or 0;
+          duration = duration or 0;
+          runeDuration = duration > 0 and duration or runeDuration
+        end
+        if (duration ~= runeDuration and ignoreRunes) then
           spellCdDursRune[id] = duration;
           spellCdExpsRune[id] = endTime;
+          if not(spellCdRuneHandles[id]) then
+            spellCdRuneHandles[id] = timer:ScheduleTimer(SpellCooldownRuneFinished, endTime - time, id);
+          end
         end
         if not(spellCdHandles[id]) then
           spellCdHandles[id] = timer:ScheduleTimer(SpellCooldownFinished, endTime - time, id);

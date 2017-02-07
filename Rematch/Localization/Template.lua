@@ -214,7 +214,7 @@ if GetLocale()=="????" then
 	L["Are you sure you want to delete the script named %s%s\124r?"] = nil
 
 -- Menus\Npcs.lua
-	L["Temporary Team"] = nil
+	L["Imported Team"] = nil
 	L["Eastern Kingdom"] = nil
 	L["Kalimdor"] = nil
 	L["Outland"] = nil
@@ -630,6 +630,8 @@ if GetLocale()=="????" then
 	L["Include Preferences"] = nil
 	L["Include Notes"] = nil
 	L["Press Ctrl+V to paste a team from the clipboard."] = nil
+	L["Only Load This Team"] = nil
+	L["This will only load the team and not save it.\n\nThis is for loading teams you do not intend to use more than once, like Family Familiar teams."] = nil
 	L["This is not a recognizable team."] = nil
 	L["An existing team already has this %s."] = nil
 	L["target"] = nil

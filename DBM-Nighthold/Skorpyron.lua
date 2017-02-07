@@ -1,7 +1,7 @@
 local mod	= DBM:NewMod(1706, "DBM-Nighthold", nil, 786)
 local L		= mod:GetLocalizedStrings()
 
-mod:SetRevision(("$Revision: 15529 $"):sub(12, -3))
+mod:SetRevision(("$Revision: 15738 $"):sub(12, -3))
 mod:SetCreatureID(102263)
 mod:SetEncounterID(1849)
 mod:DisableESCombatDetection()--Remove if blizz fixes trash firing ENCOUNTER_START
@@ -26,9 +26,17 @@ mod:RegisterEventsInCombat(
 
 --TODO, Mythic Transform casts still push timers back by 3-6 seconds. timer correction gets even more tedius with that so feeling lazy about that for now.
 --I believe he'll just use whatever abilities he's ready to use after his stun is gone. So maybe just extend timers that expire during stun, or just leave be.
+--[[
+(ability.id = 204372 or ability.id = 204316 or ability.id = 204471) and type = "begincast" or
+ability.id = 204292 and type = "summon" or
+ability.id = 204459
+--]]
 local warnBrokenShard				= mod:NewSpellAnnounce(204292, 2, nil, false)
 local warnVulnerable				= mod:NewTargetAnnounce(204459, 1)
 local warnCallScorp					= mod:NewSpellAnnounce(204372, 3)
+local warnRed						= mod:NewSpellAnnounce(214661, 2)
+local warnGreen						= mod:NewSpellAnnounce(214652, 2)
+local warnBlue						= mod:NewSpellAnnounce(204292, 2)
 
 local specWarnTether				= mod:NewSpecialWarningYou(204531, nil, nil, nil, 1, 2)
 local specWarnArcanoslash			= mod:NewSpecialWarningDefensive(204275, "Tank", nil, nil, 1, 2)
@@ -39,16 +47,16 @@ local specWarnVulnerableStarted		= mod:NewSpecialWarningSwitch(204459, false, ni
 local specWarnVulnerableOver		= mod:NewSpecialWarningEnd(204459, false, nil, nil, 1)--Special warning because anything that came off cd during stun, is being cast immediately
 local specWarnToxicChit				= mod:NewSpecialWarningMove(204744, nil, nil, nil, 1, 2)
 
-local timerArcanoslashCD			= mod:NewCDTimer(10, 204275, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
+local timerArcanoslashCD			= mod:NewCDTimer(9.6, 204275, nil, "Tank", nil, 5, nil, DBM_CORE_TANK_ICON)
 local timerCallofScorpidCD			= mod:NewCDTimer(20.3, 204372, nil, nil, nil, 1)--20-22 Unless delayed by shockwave/stun then as high as 40
 local timerShockwaveCD				= mod:NewCDTimer(57.9, 204316, nil, nil, nil, 2, nil, DBM_CORE_DEADLY_ICON)--58-60
 local timerFocusedBlastCD			= mod:NewCDTimer(30.4, 204471, nil, nil, nil, 3)--30-34 (32.8 NEW data)
 local timerVulnerable				= mod:NewBuffFadesTimer(15, 204459, nil, nil, nil, 6)
 --These are all 46 unless delayed by shockwave or stun
 mod:AddTimerLine(PLAYER_DIFFICULTY6)
-local timerVolatileFragments		= mod:NewCDTimer(46, 214661, nil, nil, nil, 6)
-local timerAcidicFragments			= mod:NewCDTimer(46, 214652, nil, nil, nil, 6)
-local timerCrystallineFragments		= mod:NewCDTimer(46, 204292, nil, nil, nil, 6)
+--local timerVolatileFragments		= mod:NewCDTimer(46, 214661, nil, nil, nil, 6)--8-46, something tells me it's not Cd based anymore
+--local timerAcidicFragments			= mod:NewCDTimer(46, 214652, nil, nil, nil, 6)
+--local timerCrystallineFragments		= mod:NewCDTimer(46, 204292, nil, nil, nil, 6)
 
 local countdownShockwave			= mod:NewCountdown(58.3, 204316)
 local countdownCallofScorpid		= mod:NewCountdown("Alt20", 204372)
@@ -77,9 +85,9 @@ function mod:OnCombatStart(delay)
 	countdownCallofScorpid:Start()
 	timerShockwaveCD:Start(56.2-delay)--56.9
 	countdownShockwave:Start(56.2-delay)
-	if self:IsMythic() then
-		timerVolatileFragments:Start(35-delay)
-	end
+--	if self:IsMythic() then
+--		timerVolatileFragments:Start(28-delay)
+--	end
 end
 
 function mod:OnCombatEnd()
@@ -91,8 +99,11 @@ end
 function mod:SPELL_CAST_START(args)
 	local spellId = args.spellId
 	if spellId == 204275 and self:AntiSpam(5, 1) then
-		specWarnArcanoslash:Show()
-		voiceArcanoslash:Play("defensive")
+		local tanking, status = UnitDetailedThreatSituation("player", "boss1")
+		if tanking or (status == 3) then--Player is current target
+			specWarnArcanoslash:Show()
+			voiceArcanoslash:Play("defensive")
+		end
 		timerArcanoslashCD:Start()
 	elseif spellId == 204372 then
 		timerCallofScorpidCD:Start()
@@ -243,11 +254,14 @@ mod.SPELL_PERIODIC_MISSED = mod.SPELL_PERIODIC_DAMAGE
 function mod:UNIT_SPELLCAST_SUCCEEDED(uId, _, _, spellGUID)
 	local _, _, _, _, spellId = strsplit("-", spellGUID)
 	if spellId == 214800 then--Transform(Red)
-		timerAcidicFragments:Start()
+		warnRed:Show()
+--		timerAcidicFragments:Start()
 	elseif spellId == 215042 then--Transform(Green)
-		timerCrystallineFragments:Start()
+		warnGreen:Show()
+--		timerCrystallineFragments:Start()
 	elseif spellId == 215055 then--Transform(Blue)
-		timerVolatileFragments:Start()
+		warnBlue:Show()
+--		timerVolatileFragments:Start()
 	end
 end
 

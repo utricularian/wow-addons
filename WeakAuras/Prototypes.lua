@@ -2540,7 +2540,7 @@ WeakAuras.event_prototypes = {
       {
         name = "totemName",
         display = L["Totem Name"],
-        type = "spell",
+        type = "string",
       },
       {
         name = "clones",
@@ -3009,7 +3009,7 @@ WeakAuras.event_prototypes = {
     init = function(trigger)
     --trigger.itemName = WeakAuras.CorrectItemName(trigger.itemName) or 0;
     trigger.itemName = trigger.itemName or 0;
-    local itemName = type(trigger.itemName) == "number" and trigger.itemName or "'" .. trigger.itemName .. "'";
+    local itemName = type(trigger.itemName) == "number" and trigger.itemName or "[[" .. trigger.itemName .. "]]";
 
       local ret = [[
         local inverse = %s;

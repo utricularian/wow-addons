@@ -279,6 +279,29 @@ GTFO.SpellID["215876"] = {
   sound = 1;
 };
 
+GTFO.SpellID["231948"] = {
+  --desc = "Arcfence";
+  sound = 1;
+};
+
+GTFO.SpellID["222405"] = {
+  --desc = "Solar Radiance (Kobold Drawing)";
+  sound = 1;
+  alwaysAlert = true;
+  ignoreApplication = true;
+};
+
+GTFO.SpellID["219032"] = {
+  --desc = "Arcane Breath (Senegos Drawing)";
+  sound = 1;
+  tankSound = 2;
+};
+
+GTFO.SpellID["216476"] = {
+  --desc = "Blizzard (Humongris)";
+  sound = 1;
+};
+
 -- **********
 -- * Mardum *
 -- **********
@@ -323,12 +346,22 @@ GTFO.SpellID["197609"] = {
   sound = 1;
 };
 
+GTFO.SpellID["224679"] = {
+  --desc = "Condensed Fel Energy (Vizuul the Twisted)";
+  sound = 1;
+};
+
 -- ************************
 -- * Vault of the Wardens *
 -- ************************
 
 GTFO.SpellID["201037"] = {
   --desc = "Seeping Shadows (Kethrazor)";
+  sound = 1;
+};
+
+GTFO.SpellID["214625"] = {
+  --desc = "Fel Chain (Tirathon Saltheril)";
   sound = 1;
 };
 
@@ -803,6 +836,11 @@ GTFO.SpellID["221866"] = {
   tankSound = 0;
 };
 
+GTFO.SpellID["198245"] = {
+  --desc = "Brutal Haymaker (Smashspite the Hateful)";
+  sound = 1;
+};
+
 -- *************************
 -- * The Emerald Nightmare *
 -- *************************
@@ -909,6 +947,73 @@ GTFO.SpellID["211634"] = {
 -- * Nighthold *
 -- *************
 
+-- TODO: Volatile Fragment (Skorpyron)
+-- TODO: Sterilize (Trilliax) -- FF Damage
+-- TODO: Arcing Bonds (Trilliax) -- FF Damage
+-- TODO: Fel Stomp (Spellblade Aluriel)
+-- TODO: Flames of Argus (Tichondrius)
+-- TODO: Ring of Shadows (Tichondrius)
+-- TODO: Isolated Rage (Krosus)
+-- TODO: Call of Night (High Botanist Tel'arn) -- when marked and not standing by someone unmarked
+-- TODO: Collapse of Night (High Botanist Tel'arn) -- when marked and not standing by someone unmarked
+-- TODO: Solar Collapse (High Botanist Tel'arn) -- Any ticks avoidable?
+-- TODO: Frigid Pulse (Star Augur Etaeus)
+-- TODO: Desolate Ground (Gul'dan)
+-- TODO: Flames of Sargeras (Gul'dan) -- FF 
+
+GTFO.SpellID["204744"] = {
+  --desc = "Toxic Chitin (Skorpyron)";
+  sound = 1;
+};
+
+GTFO.SpellID["211659"] = {
+  --desc = "Arcane Tether (Skorpyron)";
+  sound = 1;
+  tankSound = 0;
+  test = true;
+};
+
+GTFO.SpellID["230254"] = {
+  --desc = "Coalesced Soul (Ariadne)";
+  sound = 1;
+};
+
+GTFO.SpellID["230488"] = {
+  --desc = "Rumbling Ground (Torm the Brute)";
+  sound = 1;
+};
+
+GTFO.SpellID["205707"] = {
+  --desc = "Temporal Orb (Chronomatic Anomaly)";
+  sound = 1;
+};
+
+GTFO.SpellID["226205"] = {
+  --desc = "Slime Pool (Sludgerax)";
+  sound = 1;
+};
+
+GTFO.SpellID["223718"] = {
+  --desc = "Bursting Slime (Sludgerax)";
+  sound = 1;
+  negatingDebuffSpellID = 234585; -- Oozing Rush
+};
+
+GTFO.SpellID["206488"] = {
+  --desc = "Arcane Seepage (Trilliax)";
+  sound = 1;
+};
+
+GTFO.SpellID["224572"] = {
+  --desc = "Disrupting Energy (Nighthold Protector)";
+  sound = 1;
+};
+
+GTFO.SpellID["225390"] = {
+  --desc = "Stellar Dust";
+  sound = 1;
+};
+
 GTFO.SpellID["212736"] = {
   --desc = "Pool of Frost (Spellblade Aluriel)";
   sound = 1;
@@ -924,19 +1029,6 @@ GTFO.SpellID["213278"] = {
   sound = 1;
 };
 
-GTFO.SpellID["206398"] = {
-  --desc = "Fel Flame (Star Augur Etraeus)";
-  sound = 1;
-  applicationOnly = true;
-  test = true;
-};
-
-GTFO.SpellID["219950"] = {
-  --desc = "Controlled Chaos (High Botanist Tel'arn)";
-  sound = 1;
-  test = true;
-};
-
 GTFO.SpellID["213624"] = {
   --desc = "Mark of Frost (Spellblade Aluriel)";
   sound = 4;
@@ -946,7 +1038,6 @@ GTFO.SpellID["213624"] = {
 GTFO.SpellID["213520"] = {
   --desc = "Arcane Orb (Spellblade Aluriel)";
   sound = 1;
-  test = true;
 };
 
 GTFO.SpellID["212494"] = {
@@ -955,18 +1046,80 @@ GTFO.SpellID["212494"] = {
   tankSound = 0;
 };
 
+GTFO.SpellID["222111"] = {
+  --desc = "Roiling Flame";
+  sound = 1;
+};
+
+GTFO.SpellID["225856"] = {
+  --desc = "Poison Brambles (Shal'dorei Naturalist)";
+  sound = 1;
+};
+
 GTFO.SpellID["216027"] = {
   --desc = "Nether Zone (Tichondrius)";
   sound = 1;
 };
 
-GTFO.SpellID["209433"] = {
-  --desc = "Spanning Singularity (Grand Magistrix Elisande)";
+GTFO.SpellID["224978"] = {
+  --desc = "Infinite Abyss (Abyss Watcher)";
   sound = 1;
+};
+
+GTFO.SpellID["224984"] = {
+  --desc = "Fel Glare (Abyss Watcher)";
+  sound = 1;
+  negatingDebuffSpellID = 224982; -- Fel Glare
+};
+
+GTFO.SpellID["213534"] = {
+  --desc = "Echoes of the Void (Tichondrius)";
+  sound = 1;
+};
+
+GTFO.SpellID["206398"] = {
+  --desc = "Felflame (Star Augur Etaeus)";
+  sound = 1;
+  negatingDebuffSpellID = 214167; -- Gravitational Pull
+  applicationOnly = true;
+};
+
+GTFO.SpellID["206921"] = {
+  --desc = "Iceburst (Star Augur Etraeus)";
+  sound = 1;
+  tankSound = 0;
+};
+
+GTFO.SpellID["224561"] = {
+  --desc = "Celestial Brand (Astrologer Jarin)";
+  sound = 4;
+  negatingDebuffSpellID = 224560; -- Celestial Brand
+  test = true;
 };
 
 GTFO.SpellID["209433"] = {
   --desc = "Spanning Singularity (Grand Magistrix Elisande)";
+  sound = 1;
+  affirmingDebuffSpellID = 209166; -- Fast Time
+};
+
+GTFO.SpellID["208659"] = {
+  --desc = "Arcanetic Ring (Grand Magistrix Elisande)";
+  sound = 1;
+};
+
+GTFO.SpellID["206515"] = {
+  --desc = "Fel Efflux (Gul'dan)";
+  sound = 1;
+};
+
+GTFO.SpellID["217770"] = {
+  --desc = "Gaze of Vethriz (Gul'dan)";
+  sound = 1;
+};
+
+GTFO.SpellID["209191"] = {
+  --desc = "Empowered Liquid Hellfire (Gul'dan)";
   sound = 1;
 };
 

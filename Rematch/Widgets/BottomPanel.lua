@@ -23,7 +23,7 @@ end)
 
 function panel:Update()
 	-- save button
-	panel.SaveButton:SetEnabled(settings.loadedTeam and true)
+	panel.SaveButton:SetEnabled(settings.loadedTeam and settings.loadedTeam~=1)
 	-- summon button
 	local petID = rematch.PetCard.petID
 	local idType = rematch:GetIDType(petID)

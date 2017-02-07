@@ -11,6 +11,8 @@ local rematch = Rematch
 
 	TODO: arrange speciesIDs in the order they're fought
 
+	npcID 1 is a special npcID to note an imported team loaded with the Load button on the import dialog
+
 ]]
 
 rematch:InitModule(function()
@@ -18,7 +20,7 @@ rematch:InitModule(function()
 	rematch:CreateNpcMenus()
 end)
 
-rematch.notableNames = {[1]=L["Temporary Team"]} -- name of NPCs, indexed by NPC IDs
+rematch.notableNames = {[1]=L["Imported Team"]} -- name of NPCs, indexed by NPC IDs
 
 rematch.notableGroups = {
 	[0] = OTHER, -- Little Tommy Newcomer, Jeremy Feasel, Christoph VonFeasel

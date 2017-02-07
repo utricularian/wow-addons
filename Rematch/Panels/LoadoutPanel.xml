@@ -1,4 +1,4 @@
-<Ui>
+﻿<Ui>
 
 	<!-- this is for the two flyout buttons and also the base of the main ability buttons -->
 	<CheckButton name="RematchFlyoutAbilityTemplate" inherits="RematchAbilitySlotTemplate" virtual="true">

@@ -1,3 +1,12 @@
+01/23/2017 version 4.6.1
+- When importing a single team and saving it, the team will also immediately load.
+- The import team dialog now has a Load button to only load a team and not save it. This is for loading teams you do not intend to use more than once, like Family Familiar teams.
+- When entering combat any lingering widgets (win record, notes, etc) are hidden along with the main window.
+- Improved journal interaction with combat to reduce potential blocked actions.
+- Leveling pet toasts and the option to display them are removed if ElvUI is enabled.
+- Fix for "Lower Window Behind UI" option not working.
+- Simplified Chinese (zhCN) localization updated by Yonshuo from curse.com.
+
 11/18/2016 version 4.6.0
 - Added new option "Load Healthiest Pets" under Team Options to replace an injured or dead pet with a healthier version of identical stats, if any exist, when a team loads.
 - Added two new queue sort options to the Queue button's menu: Favorites First and Rares First. These will group favorites and/or rares to the top of the queue. If Active Sort is enabled alongside either option they will always be sorted to the top; otherwise it is a one-time sort like the rest.

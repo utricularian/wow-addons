@@ -10,7 +10,7 @@ rematch:InitModule(function()
 	rematch:RegisterMenu("SaveAsTarget",{
 		{ text=L["No Target"], npcID=nil, func=rematch.PickNpcID },
 		{ text=function() return rematch:GetNameFromNpcID(rematch.recentTarget) end, hidden=function() return not rematch.recentTarget end, npcID=function() return rematch.recentTarget end, func=rematch.PickNpcID },
-		{ text=function() return rematch:GetTeamTitle(settings.loadedTeam) end, hidden=function() return type(settings.loadedTeam)~="number" or settings.loadedTeam==rematch.recentTarget end, npcID=function() return settings.loadedTeam end, func=rematch.PickNpcID },
+		{ text=function() return rematch:GetTeamTitle(settings.loadedTeam) end, hidden=function() return type(settings.loadedTeam)~="number" or settings.loadedTeam==rematch.recentTarget or settings.loadedTeam==1 end, npcID=function() return settings.loadedTeam end, func=rematch.PickNpcID },
 		{ text=L["Noteworthy Targets"], subMenu="NotableNPCs" }, -- defined in Npcs.lua
 	})
 	dialog.SaveAs.Target.tooltipTitle=L["Target For This Team"]

@@ -79,7 +79,13 @@ end
 function rematch:SetSideline(key,team,loadout)
 	wipe(sideline)
 	wipe(context)
+
 	key = key or uniqueKey(L["New Team"])
+
+	-- special case for an imported team being sidelined
+	if key==1 and team then
+		key = team.teamName or rematch:GetNameFromNpcID(1)
+	end
 
 	sideline[key] = {}
 

@@ -1,4 +1,4 @@
--- Rematch zhTW.lua
+﻿-- Rematch zhTW.lua
 -- v4.4.8
 -- 2016-07-20
 -- Translator: 彩虹ui https://www.facebook.com/rainbowui/

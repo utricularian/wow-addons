@@ -428,7 +428,7 @@ end
 
 -- does a "criterea" toast to alert that the leveling pet has changed
 function rematch:ToastNextLevelingPet(petID)
-	if settings.HidePetToast then
+	if settings.HidePetToast or IsAddOnLoaded("ElvUI") then
 		return -- aww :(
 	end
 	if not rematch.LevelingToastSystem then

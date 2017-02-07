@@ -5,6 +5,14 @@
 -- Template.lua is the "master file" with all current localization strings
 -- grouped by the file they're first encountered.
 
+-- New strings in 4.6.1
+	L["Only Load This Team"] = nil
+	L["Imported Team"] = nil
+	L["This will only load the team and not save it.\n\nThis is for loading teams you do not intend to use more than once, like Family Familiar teams."] = nil
+
+-- Strings removed in 4.6.1
+	L["Temporary Team"] = nil
+
 -- New strings in 4.6.0
 	L["This allows you to create custom pet filters with a little bit of Lua code. See the reference buttons at the top of the New Script dialog for details.\n\nTo view or edit an existing script, click the Gear icon beside the script in the menu above."] = nil
 	L["Or With Panel Tabs"] = nil

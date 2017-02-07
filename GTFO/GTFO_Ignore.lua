@@ -57,5 +57,9 @@ GTFO.IgnoreScan["203121"] = true; -- Mark of Taerer
 GTFO.IgnoreScan["203125"] = true; -- Mark of Emeriss
 GTFO.IgnoreScan["203102"] = true; -- Mark of Ysondre
 GTFO.IgnoreScan["203124"] = true; -- Mark of Lethon
+GTFO.IgnoreScan["204766"] = true; -- Energy Surge (Skorpyron)
+GTFO.IgnoreScan["218503"] = true; -- Recursive Strikes
+GTFO.IgnoreScan["218508"] = true; -- Recursive Strikes
+
 
 

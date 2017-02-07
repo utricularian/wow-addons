@@ -147,7 +147,9 @@ function panel:PopulateTeamList()
 			saved[key].tab = nil
 			tab = nil
 		end
-		if not searchText then -- not searching for a team, fill with teams in the selected tab
+		if key==1 then
+			-- do nothing for imported teams; don't list them
+		elseif not searchText then -- not searching for a team, fill with teams in the selected tab
 			if (tab and tab==selected) or (not tab and selected==1) then
 				tinsert(workingList,key)
 			end

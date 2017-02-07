@@ -22,6 +22,7 @@
 		</Layers>
 	</Frame>
 
+	<!-- for export/send, "Include Preferences" and "Include Notes" checkbuttons -->
 	<Frame parentKey="ShareIncludes" parent="RematchDialog" hidden="true">
 		<Size x="260" y="26"/>
 		<Frames>

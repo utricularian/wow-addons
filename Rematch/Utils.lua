@@ -159,10 +159,12 @@ end
 -- hides all the pop-up and flyout widgets when doing any major event
 -- can pass name of function "HideMenu" or "HideFlyout" to hide everything but that
 -- if a menu item just clicked, it's automatically excluded from hiding (menu will take care of hiding itself)
+-- if completely is true, everything is hidden with no exceptions
 local hideWidgetFuncs = {"HideMenu","HideFlyout","HidePetCard","HideTooltip","HideWinRecord"}
-function rematch:HideWidgets(except)
+function rematch:HideWidgets(except,completely)
 	for _,funcName in pairs(hideWidgetFuncs) do
-		if funcName~=except and rematch[funcName] and (funcName~="HideMenu" or not rematch:UIJustChanged()) then
+		if rematch[funcName] and (completely or (funcName~=except and (funcName~="HideMenu" or not rematch:UIJustChanged()))) then
+--		if funcName~=except and rematch[funcName] and (funcName~="HideMenu" or not rematch:UIJustChanged()) then
 			rematch[funcName]()
 		end
 	end

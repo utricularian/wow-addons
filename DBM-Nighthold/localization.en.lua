@@ -49,6 +49,10 @@ L:SetMiscLocalization({
 ------------------
 L= DBM:GetModLocalization(1713)
 
+L:SetWarningLocalization({
+	warnSlamSoon		= "Bridge break in %ds"
+})
+
 ------------------
 -- High Botanist Tel'arn --
 ------------------
@@ -82,7 +86,8 @@ L:SetOptionLocalization({
 L= DBM:GetModLocalization(1743)
 
 L:SetMiscLocalization({
-	noCLEU4EchoRings		= "Let the waves of time crash over you!"
+	noCLEU4EchoRings		= "Let the waves of time crash over you!",
+	noCLEU4EchoOrbs			= "You'll find time can be quite volatile."
 })
 
 ------------------

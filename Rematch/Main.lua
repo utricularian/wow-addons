@@ -330,6 +330,7 @@ end
 
 -- entering combat
 function rematch:PLAYER_REGEN_DISABLED()
+	rematch:HideWidgets(nil,true) -- completely close all widgets
 	local frame = rematch.Frame
 	if frame:IsVisible() then
 		frame:Hide()
@@ -339,6 +340,9 @@ function rematch:PLAYER_REGEN_DISABLED()
 		rematch.Journal:ConfigureJournal(true) -- this will hide the journal
 	end
 	rematch:UpdateAutoLoadState(true)
+	if UseRematchButton and PetJournal:IsVisible() then
+		UseRematchButton:Hide() -- hide checkbutton on default journal if journal is up
+	end
 end
 
 -- entering a pet battle

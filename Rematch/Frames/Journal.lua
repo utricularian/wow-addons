@@ -9,6 +9,9 @@ journal.layouts = {{"left","mid","right"},{"left","mid",nil,"right"},{"left","mi
 
 journal.elements = {} -- table of frames/regions in the default journal to be hidden, indexed by the element and their original alpha
 
+journal.notLoaded = true -- becomes nil once the journal successfully loads
+journal.defaultHidden = nil -- becomes true while default journal's widgets are hidden
+
 rematch:InitModule(function()
 	rematch.Journal = journal
 	settings = RematchSettings
@@ -110,6 +113,7 @@ function journal:ShowElement(element)
 	end
 end
 
+-- this is the OnShow of RematchJournal, not the default (which does a Configure)
 function journal:OnShow()
 	journal:HideElement(PetJournal)
 	journal:HideElement(CollectionsJournalCloseButton)
@@ -118,6 +122,7 @@ function journal:OnShow()
 	end
 end
 
+-- this is the OnHide of RematchJournal, not the default
 function journal:OnHide()
 	rematch:HideWidgets()
 	rematch:HideDialog()
@@ -140,6 +145,9 @@ function journal:DefaultJournalOnHide()
 		-- wait a frame to let UISpecialFrames go through everything (otherwise standalone frame can be next frame to hide)
 		C_Timer.After(0,function() rematch.Frame:Show() end)
 	end
+	if journal:IsShown() then
+		journal:Hide()
+	end
 end
 
 -- this is called in the PetJournal's OnShow and when journal tabs clicked; to set up the journal
@@ -151,14 +159,8 @@ function journal:ConfigureJournal(hide)
 		rematch.Frame:Hide() -- hide standalone Frame (Frame and Journal can't coexist)
 	end
 
-	rematch:HideWidgets()
-	rematch:HideDialog()
-	rematch:HideNotes(settings.NotesNoESC)
-	rematch.MiniPanel:Hide()
-	rematch.MiniQueue:Hide()
-
 	if UseRematchButton then
-		UseRematchButton:Show()
+		UseRematchButton:SetShown(not InCombatLockdown()) -- may not be visible; this is checkbutton on default journal
 		UseRematchButton:SetChecked(not settings.UseDefaultJournal)
 	end
 
@@ -169,12 +171,17 @@ function journal:ConfigureJournal(hide)
 			journal:ClearAllPoints()
 			journal:Hide()
 			journal:SetShownExtras(true)
-		else
+		elseif not settings.UseDefaultJournal then
 			rematch:print(L["You are in combat. Try again when out of combat."])
-			UseRematchButton:Hide()
 		end
 		return
 	end
+
+	rematch:HideWidgets(nil,true)
+	rematch:HideDialog()
+	rematch:HideNotes(settings.NotesNoESC)
+	rematch.MiniPanel:Hide()
+	rematch.MiniQueue:Hide()
 
 	rematch.timeUIChanged = GetTime()
 
